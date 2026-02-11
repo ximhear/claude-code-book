@@ -604,10 +604,53 @@ $ARGUMENTS를 심층 조사해주세요:
 3. 파일 참조와 함께 결과 요약
 ```
 
-| 접근 방식 | 시스템 프롬프트 | 태스크 | 추가 로드 |
-|-----------|----------------|--------|-----------|
-| `context: fork` 스킬 | 에이전트 유형에서 가져옴 | SKILL.md 내용 | CLAUDE.md |
-| 스킬을 프리로드한 서브에이전트 | 서브에이전트 마크다운 본문 | Claude의 위임 메시지 | 프리로드된 스킬 + CLAUDE.md |
+**실행 흐름:**
+
+```
+사용자: /deep-research 인증 시스템
+
+→ Claude가 격리된 서브에이전트 생성
+→ 시스템 프롬프트: agent 필드의 에이전트 유형(Explore)이 정의하는 기본 프롬프트
+→ 태스크(사용자 메시지): SKILL.md의 본문 ("$ARGUMENTS를 심층 조사해주세요...")
+→ $ARGUMENTS가 "인증 시스템"으로 치환됨
+→ CLAUDE.md가 추가 컨텍스트로 로드됨
+→ 서브에이전트가 독립적으로 작업 수행 후 결과 반환
+```
+
+`context: fork` 스킬은 **SKILL.md 자체가 서브에이전트의 작업 지시서**가 됩니다.
+
+서브에이전트의 `skills` 필드로 스킬을 프리로드하는 방식도 있습니다. 이 경우 서브에이전트의 마크다운 본문이 시스템 프롬프트가 되고, Claude가 서브에이전트에 위임하는 메시지가 태스크가 됩니다:
+
+```
+# .claude/agents/analyzer.md
+---
+skills:
+  - deep-research
+  - code-review
+---
+
+코드 분석 전문 에이전트입니다.
+분석 요청을 받으면 프리로드된 스킬을 활용하여...
+```
+
+```
+사용자: "이 모듈을 분석해줘"
+
+→ Claude가 analyzer 서브에이전트에 위임
+→ 시스템 프롬프트: analyzer.md의 본문 ("코드 분석 전문 에이전트입니다...")
+→ 태스크(사용자 메시지): Claude가 작성한 위임 메시지 ("이 모듈을 분석해달라는 요청입니다...")
+→ 프리로드된 스킬(deep-research, code-review) + CLAUDE.md가 추가 컨텍스트로 로드됨
+```
+
+**두 접근 방식 비교:**
+
+| | `context: fork` 스킬 | 스킬을 프리로드한 서브에이전트 |
+|---|---|---|
+| **시스템 프롬프트** | `agent` 필드의 에이전트 유형이 제공 | 서브에이전트 마크다운(.md) 본문 |
+| **태스크** | SKILL.md 본문 내용 | Claude의 위임 메시지 |
+| **추가 컨텍스트** | CLAUDE.md | 프리로드된 스킬 + CLAUDE.md |
+| **호출 방식** | `/skill-name` 슬래시 커맨드 | Claude가 자동으로 위임 |
+| **적합한 용도** | 사용자가 직접 실행하는 단일 작업 | 복합 작업에서 스킬을 조합하는 에이전트 |
 
 ### 스킬 배포 범위
 
@@ -619,17 +662,48 @@ $ARGUMENTS를 심층 조사해주세요:
 
 ### 스킬 접근 제어
 
-```
-# 특정 스킬만 허용
-Skill(commit)
-Skill(review-pr *)
+스킬 접근 제어는 Claude Code의 **권한 시스템** (`/permissions` 명령어 또는 `settings.json`의 `permissions`)에서 설정합니다. `Bash()`, `Read()` 등 다른 도구 권한과 동일한 문법을 사용합니다.
 
-# 특정 스킬 차단
-Skill(deploy *)
+**허용 규칙 (allow):**
 
-# 전체 스킬 차단 (deny 규칙에 추가)
-Skill
 ```
+Skill(commit)         # "commit" 스킬만 정확히 허용
+Skill(review-pr *)    # "review-pr"로 시작하는 모든 스킬 허용
+                      # (review-pr, review-pr-comments 등)
+```
+
+**차단 규칙 (deny):**
+
+```
+Skill(deploy *)       # "deploy"로 시작하는 스킬 차단
+Skill                 # 모든 스킬 실행 차단
+```
+
+**설정 예시 (settings.json):**
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Skill(commit)",
+      "Skill(review-pr *)"
+    ],
+    "deny": [
+      "Skill(deploy *)"
+    ]
+  }
+}
+```
+
+**문법 규칙:**
+
+| 패턴 | 의미 | 예시 |
+|------|------|------|
+| `Skill(name)` | 정확히 해당 이름의 스킬만 매칭 | `Skill(commit)` → `commit`만 |
+| `Skill(name *)` | 해당 접두사로 시작하는 모든 스킬 매칭 | `Skill(review *)` → `review`, `review-pr` 등 |
+| `Skill` | 모든 스킬 매칭 (deny에 넣으면 전체 차단) | — |
+
+> **참고**: 이 문법은 `Bash(npm *)`, `Read(src/*)` 같은 다른 도구 권한 규칙과 동일한 패턴입니다. 자세한 내용은 [10장: 권한 모드와 보안](../03-configuration/02-permissions.md)을 참조하세요.
 
 ---
 
