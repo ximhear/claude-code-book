@@ -8,6 +8,10 @@
 
 ## 키보드 단축키
 
+> **macOS에서 Ctrl 키에 대해**: Claude Code는 터미널 앱 안에서 실행됩니다. 터미널에서 Ctrl 키는 ASCII 제어 문자를 전송하므로, macOS에서도 **Cmd가 아닌 Ctrl**을 사용합니다. Cmd 키는 터미널 앱 자체의 동작(복사, 붙여넣기, 탭 전환 등)에 사용됩니다. 따라서 아래 Ctrl 단축키는 macOS/Linux/Windows 모두 동일합니다.
+>
+> 세션 중 `?`를 누르면 현재 환경에서 사용 가능한 단축키 목록을 확인할 수 있습니다.
+
 ### 기본 조작
 
 | 단축키 | 동작 |
@@ -19,6 +23,7 @@
 | **Ctrl+C** | 현재 작업 인터럽트 (연속 누름 시 종료) |
 | **Ctrl+D** | 세션 종료 (exit) |
 | **Tab** | 자동 완성 (파일명, 프롬프트 제안 수락) |
+| **?** | 사용 가능한 단축키 목록 표시 |
 
 ### 모드 전환 및 기능 토글
 
@@ -28,7 +33,13 @@
 | **Option+T** (Mac) / **Alt+T** | Extended Thinking 토글 (아래 참고) |
 | **Option+P** (Mac) / **Alt+P** | 모델 전환 (아래 참고) |
 
-> **Option/Alt 단축키 설정**: macOS에서 Option+T, Option+P가 작동하지 않으면 `/terminal-setup`을 실행하세요. 터미널 앱의 Option 키 동작을 자동 설정합니다. iTerm2는 프로파일 → Keys → "Option key acts as Meta"를, 기본 Terminal.app은 프로파일 → Keyboard → "Use Option as Meta key"를 활성화합니다.
+> **macOS Option/Alt 단축키 설정**: macOS에서 Option 키를 사용하는 단축키(`Alt+B`, `Alt+F`, `Alt+Y`, `Alt+M`, `Alt+P`, `Option+T`)가 작동하지 않으면 `/terminal-setup`을 실행하세요. 터미널 앱에서 Option 키를 Meta로 설정해야 합니다:
+> - **iTerm2**: Settings → Profiles → Keys → Left/Right Option key를 "Esc+"로 설정
+> - **Terminal.app**: Settings → Profiles → Keyboard → "Use Option as Meta Key" 활성화
+> - **VS Code 터미널**: Settings → Profiles → Keys → Left/Right Option key를 "Esc+"로 설정
+
+| 단축키 | 동작 |
+|--------|------|
 | **Ctrl+O** | Verbose 모드 토글 (상세 출력) |
 | **Ctrl+B** | 백그라운드 태스크 토글 (Tmux에서는 두 번 누름) |
 | **Ctrl+T** | 태스크 목록 표시 토글 |
@@ -43,9 +54,9 @@
 | **Ctrl+K** | 커서 이후 텍스트 삭제 (클립보드 저장) |
 | **Ctrl+U** | 전체 줄 삭제 (클립보드 저장) |
 | **Ctrl+Y** | 삭제한 텍스트 붙여넣기 |
-| **Alt+Y** | 붙여넣기 히스토리 순환 (Ctrl+Y 후) |
-| **Alt+B** | 한 단어 뒤로 이동 |
-| **Alt+F** | 한 단어 앞으로 이동 |
+| **Alt+Y** | 붙여넣기 히스토리 순환 (Ctrl+Y 후, macOS는 Option as Meta 필요) |
+| **Alt+B** | 한 단어 뒤로 이동 (macOS는 Option as Meta 필요) |
+| **Alt+F** | 한 단어 앞으로 이동 (macOS는 Option as Meta 필요) |
 | **Ctrl+W** | 이전 단어 삭제 |
 | **Ctrl+R** | 역방향 히스토리 검색 |
 | **Ctrl+G** | 기본 텍스트 에디터에서 프롬프트 편집 |
@@ -56,7 +67,7 @@
 
 | 단축키 | 환경 |
 |--------|------|
-| **Ctrl+V** | 기본 |
+| **Ctrl+V** | 기본 (macOS 포함) |
 | **Cmd+V** | iTerm2 (macOS) |
 | **Alt+V** | Windows |
 
@@ -80,7 +91,6 @@
 |------|------|--------|
 | **Shift+Enter** | 줄바꿈 | iTerm2, WezTerm, Ghostty, Kitty (네이티브) |
 | **`\` + Enter** | 줄바꿈 | 모든 터미널 |
-| **Option+Enter** | 줄바꿈 | macOS 기본 |
 | **Ctrl+J** | 라인 피드 | 모든 터미널 |
 | **붙여넣기** | 여러 줄 입력 | 코드 블록, 로그 등 |
 
@@ -175,21 +185,29 @@ Bash 모드의 특징:
 > 테스트가 통과했어! 이제 로깅도 추가해줘
 ```
 
-## 셸 명령어 출력 주입: `` !`command` ``
+## 외부 데이터를 프롬프트에 전달하기
 
-프롬프트 **안에서** 백틱과 함께 사용하면 명령어 출력을 프롬프트에 인라인으로 주입합니다:
+명령어 출력을 Claude에게 전달하려면 **파이프**를 사용합니다:
+
+```bash
+# 에러 로그를 분석
+tail -50 /var/log/app.log | claude -p "이 에러 로그를 분석해줘"
+
+# Git diff를 리뷰
+git diff --staged | claude -p "이 변경을 리뷰해줘"
+
+# 빌드 에러를 디버깅
+cat build-error.txt | claude -p "이 빌드 에러의 원인을 설명해줘"
+```
+
+대화형 세션 안에서는 `!` Bash 모드로 명령어를 실행하면 출력이 자동으로 대화 컨텍스트에 추가됩니다:
 
 ```
-> 이 에러 로그를 분석해줘: !`tail -50 /var/log/app.log`
-```
+> ! cat /var/log/app.log | tail -50
+[로그 출력이 컨텍스트에 추가됨]
 
+> 위 로그에서 에러 원인을 분석해줘
 ```
-> 현재 Git diff를 리뷰해줘: !`git diff --staged`
-```
-
-이 방식은 외부 데이터를 프롬프트의 일부로 전달할 때 유용합니다.
-
-> **차이점 정리**: `! command`는 독립적으로 명령어를 실행하고, `` !`command` ``는 프롬프트 안에 출력을 삽입합니다.
 
 ---
 
@@ -354,8 +372,8 @@ cat error.log | claude -p "이 에러를 분석해줘"
 | **입력** | Enter(전송), Shift+Enter(줄바꿈), ↑↓(히스토리) |
 | **파일 참조** | `@path/to/file`로 파일을 컨텍스트에 로드 |
 | **이미지** | 파일 경로 전달 또는 Ctrl+V 붙여넣기 |
-| **Bash 모드** | `! command`로 직접 명령어 실행 |
-| **출력 주입** | `` !`command` ``로 프롬프트에 출력 삽입 |
+| **Bash 모드** | `! command`로 직접 명령어 실행 (출력은 컨텍스트에 자동 추가) |
+| **외부 데이터** | 파이프(`cat log \| claude -p "분석"`)로 데이터 전달 |
 | **모델 전환** | Option+P / Alt+P |
 | **권한 모드** | Shift+Tab으로 순환 (Default/Auto-edit/Plan/Delegate) |
 | **프롬프트** | 구체적으로, 검증 대상 포함, 탐색 후 구현, 위임 |
