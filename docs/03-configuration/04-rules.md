@@ -96,7 +96,7 @@ your-project/
 
 YAML frontmatter에 `paths` 필드를 추가하면 **특정 파일 작업 시에만** 로드됩니다:
 
-```markdown
+````markdown
 ---
 paths:
   - "src/api/**/*.ts"
@@ -112,7 +112,7 @@ paths:
   ```
 - OpenAPI 문서 주석 포함
 - 요청/응답 타입은 별도 파일로 분리
-```
+````
 
 ### 글로브 패턴
 
