@@ -23,19 +23,54 @@ CLAUDE.md가 없으면 Claude는 매 세션마다 프로젝트를 처음부터 �
 
 CLAUDE.md는 여러 위치에 존재할 수 있으며, 각 위치마다 범위가 다릅니다.
 
-| 우선순위 | 유형 | 위치 | 범위 | 공유 |
-|:--------:|------|------|------|:----:|
-| 1 (최고) | **관리자 정책** | 시스템 경로 (아래 참고) | 조직 전체 | 전체 |
-| 2 | **사용자 전역** | `~/.claude/CLAUDE.md` | 모든 프로젝트 | 개인 |
-| 3 | **프로젝트** | `./CLAUDE.md` 또는 `./.claude/CLAUDE.md` | 프로젝트 | 팀 (git) |
-| 4 | **프로젝트 규칙** | `./.claude/rules/*.md` | 프로젝트 (모듈식) | 팀 (git) |
-| 5 | **프로젝트 로컬** | `./CLAUDE.local.md` | 프로젝트 (개인) | 개인 |
-| 6 (최저) | **자동 메모리** | `~/.claude/projects/<hash>/memory/` | 프로젝트별 자동 | 개인 |
+| 레벨 | 유형 | 위치 | 범위 | 공유 |
+|:----:|------|------|------|:----:|
+| **관리자** | 관리자 정책 | 시스템 경로 (아래 참고) | 조직 전체 | 전체 |
+| **사용자** | 사용자 메모리 | `~/.claude/CLAUDE.md` | 모든 프로젝트 | 개인 |
+| **사용자** | 사용자 규칙 | `~/.claude/rules/*.md` | 모든 프로젝트 | 개인 |
+| **프로젝트** | 프로젝트 메모리 | `./CLAUDE.md` 또는 `./.claude/CLAUDE.md` | 프로젝트 | 팀 (git) |
+| **프로젝트** | 프로젝트 규칙 | `./.claude/rules/*.md` | 프로젝트 (모듈식) | 팀 (git) |
+| **프로젝트** | 프로젝트 로컬 | `./CLAUDE.local.md` | 프로젝트 (개인) | 개인 |
+| **자동** | 자동 메모리 | `~/.claude/projects/<hash>/memory/` | 프로젝트별 자동 | 개인 |
 
 **관리자 정책 경로**:
 - macOS: `/Library/Application Support/ClaudeCode/CLAUDE.md`
 - Linux: `/etc/claude-code/CLAUDE.md`
 - Windows: `C:\Program Files\ClaudeCode\CLAUDE.md`
+
+### 충돌 시 우선순위 원칙
+
+> **"More specific instructions take precedence over broader ones."**
+> — Claude Code 공식 문서
+
+동일한 항목에 대해 서로 다른 CLAUDE.md 파일이 다른 지시를 내릴 경우, **더 구체적인 범위**의 지시가 우선합니다:
+
+```
+관리자 정책 (가장 넓음, 가장 낮은 우선순위)
+  ↓
+사용자 레벨 (~/.claude/CLAUDE.md, ~/.claude/rules/*.md)
+  ↓
+프로젝트 레벨 (./CLAUDE.md, .claude/rules/*.md, CLAUDE.local.md)
+  ↓
+하위 디렉토리 (./subdir/CLAUDE.md — 가장 좁음, 가장 높은 우선순위)
+```
+
+**예시**: 상위 폴더 A와 하위 폴더 B에 각각 CLAUDE.md가 있을 때:
+
+```markdown
+# A/CLAUDE.md
+- 들여쓰기는 탭 사용
+- 테스트는 Jest로 작성
+
+# A/B/CLAUDE.md
+- 들여쓰기는 스페이스 2칸 사용
+```
+
+B 폴더의 파일 수정 시:
+- **들여쓰기** → 스페이스 2칸 (B의 지시가 우선)
+- **테스트** → Jest (B에서 별도 언급이 없으므로 A의 지시가 유지)
+
+같은 레벨 내(예: 사용자 메모리와 사용자 규칙)에서의 우선순위 차이는 공식 문서에서 명시되지 않습니다. 동일 레벨에서는 **충돌을 피하도록** 역할을 분리하는 것이 좋습니다.
 
 ---
 
@@ -55,6 +90,7 @@ CLAUDE.md는 여러 위치에 존재할 수 있으며, 각 위치마다 범위�
 ### 작업 중 (온디맨드)
 
 - 하위 디렉토리의 파일을 읽을 때, 해당 디렉토리에 있는 CLAUDE.md를 **자동으로 발견하여 로드**
+- 온디맨드로 로드된 하위 디렉토리의 CLAUDE.md는 **가장 높은 우선순위**를 가짐 (가장 구체적인 범위)
 - 모노레포에서 패키지별 CLAUDE.md를 사용할 때 유용합니다
 
 ```
