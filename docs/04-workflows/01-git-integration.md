@@ -299,6 +299,21 @@ $ARGUMENTS
 - 에지 케이스와 에러 처리
 ```
 
+**스킬 사용 예시:**
+
+```
+# 슬래시 커맨드로 호출 — $ARGUMENTS에 뒤의 텍스트가 전달됨
+> /review src/auth/login.ts
+
+# 여러 파일을 한번에 리뷰
+> /review src/auth/login.ts src/auth/token.ts
+
+# 최근 변경 사항을 리뷰 (git diff 결과를 인자로 전달)
+> /review 최근 커밋의 변경 사항
+```
+
+`/review src/auth/login.ts`를 실행하면 SKILL.md의 `$ARGUMENTS`가 `src/auth/login.ts`로 치환되어 Claude가 해당 파일을 읽고 4가지 항목을 기준으로 리뷰합니다.
+
 ---
 
 ## 실전 Git 워크플로우
