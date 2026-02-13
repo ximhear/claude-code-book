@@ -153,19 +153,42 @@ Claude의 PR 생성 과정:
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 ```
 
-### `--from-pr` 세션 연결
+### `--from-pr` — PR 세션 이어하기
 
-기존 PR의 컨텍스트를 세션에 로드합니다:
+`--from-pr`은 **특정 PR에 연결된 이전 세션을 복원**하는 기능입니다. `--resume`의 PR 특화 버전으로, 세션 ID 대신 PR 번호로 세션을 찾습니다.
 
 ```bash
-# PR 번호로 세션 시작
+# PR 번호로 세션 복원
 claude --from-pr 123
 
-# PR URL로 세션 시작
+# PR URL로 세션 복원
 claude --from-pr https://github.com/org/repo/pull/123
 ```
 
-PR의 설명, 코멘트, 변경 파일이 자동으로 로드되어 리뷰, 수정, 추가 작업에 바로 활용할 수 있습니다.
+> **주의**: `--from-pr`은 PR 브랜치를 체크아웃하거나 소스 코드를 변경하지 않습니다. 이전 세션의 대화 이력과 컨텍스트만 복원합니다. 필요하다면 브랜치 전환은 별도로 해야 합니다.
+
+**세션과 PR의 연결 조건:**
+
+세션이 PR에 연결되려면 **Claude Code 세션 안에서** `gh pr create`가 실행되어야 합니다:
+
+```bash
+# Claude에게 PR 생성을 요청 → 세션이 PR에 자동 연결됨 ✅
+> PR을 만들어줘
+
+# 세션 내 Bash 모드로 직접 실행 → 연결됨 ✅
+> !gh pr create --title "feat: add auth"
+
+# 별도 터미널에서 실행 (Claude Code 세션 밖) → 연결 안 됨 ❌
+$ gh pr create --title "feat: add auth"
+```
+
+누가 실행하느냐(Claude vs 사용자)는 상관없고, Claude Code 세션 안에서 실행되었느냐가 핵심입니다.
+
+**활용 시나리오:**
+
+- PR을 만든 후 **리뷰 코멘트에 대응**할 때
+- PR 작업을 중단했다가 **나중에 이어**할 때
+- 여러 PR을 동시에 진행하면서 **특정 PR의 세션으로 전환**할 때
 
 ---
 
@@ -317,7 +340,7 @@ Claude는 충돌이 발생하면 자동으로 해결을 시도합니다.
 | **커밋** | 변경 분석 후 메시지 자동 생성, Co-Authored-By 트레일러 |
 | **안전 원칙** | 명시적 요청 없이 커밋/푸시 금지, force 옵션 사용 금지 |
 | **PR** | `gh pr create`로 생성, Summary/Test plan 형식 |
-| **`--from-pr`** | PR 컨텍스트를 세션에 로드 |
+| **`--from-pr`** | PR에 연결된 이전 세션 복원 (세션 내 `gh pr create` 필요) |
 | **Worktree** | 병렬 작업을 위한 독립적 작업 디렉토리 |
 | **충돌 해결** | 충돌 마커 읽고 양쪽 의도 파악하여 병합 |
 | **코드 리뷰** | 대화형 리뷰, PR 리뷰, 커스텀 스킬 |
