@@ -309,7 +309,7 @@ Claude는 컨텍스트 한도에 근접하면 **자동으로 압축**합니다:
 1. 무관한 작업 사이에 `/clear` 사용 (완전 초기화)
 2. `/compact`로 대화 요약
 3. 조사 작업은 서브에이전트에 위임 (별도 컨텍스트)
-4. 스킬은 온디맨드 로딩 (`disable-model-invocation: true`)
+4. 스킬은 기본적으로 온디맨드 로딩 (description만 컨텍스트에 포함, 전체 내용은 호출 시 로드). `disable-model-invocation: true`를 설정하면 description도 컨텍스트에서 제외하여 더 절약 가능
 5. CLAUDE.md는 필수 정보만 포함
 
 ---
