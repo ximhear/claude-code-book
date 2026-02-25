@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0] - 2026-02-25
+### Changed
+- 25장 플러그인 챕터를 공식 문서 기반으로 전면 수정
+  - `.claude-plugin/plugin.json` 매니페스트 구조, `name@marketplace` 설치 문법, `/plugin` 슬래시 커맨드
+  - `marketplace.json` 스키마, 소스 유형, 공식 마켓플레이스(`claude-plugins-official`) 소개
+  - `extraKnownMarketplaces`, `enabledPlugins` 맵 형식, `hostPattern` 엔터프라이즈 설정
+- CLI 레퍼런스, 엔터프라이즈, settings.json, Rules, 용어집 교차 참조 동기화
+
 ## [0.2.0] - 2026-02-25
 ### Added
 - 25장: 플러그인 챕터 신규 추가 (플러그인 구조, 설치/관리, 마켓플레이스, 엔터프라이즈 관리, 실전 예제)

@@ -81,15 +81,19 @@ claude mcp get <이름>                      # 서버 상세 정보
 claude mcp remove <이름>                   # 서버 제거
 ```
 
-### `claude plugin`
+### `/plugin`
 
 ```bash
-claude plugin install <패키지>         # 플러그인 설치
-claude plugin list                     # 설치된 플러그인 목록
-claude plugin enable <이름>            # 활성화
-claude plugin disable <이름>           # 비활성화
-claude plugin remove <이름>            # 제거
-claude plugin update                   # 전체 업데이트
+/plugin                                    # 인터랙티브 관리 UI (4탭)
+/plugin install name@marketplace           # 플러그인 설치
+/plugin uninstall name@marketplace         # 플러그인 제거
+/plugin enable name@marketplace            # 활성화
+/plugin disable name@marketplace           # 비활성화
+/plugin marketplace add <source>           # 마켓플레이스 추가
+/plugin marketplace list                   # 마켓플레이스 목록
+/plugin marketplace update <name>          # 마켓플레이스 새로고침
+/plugin marketplace remove <name>          # 마켓플레이스 제거
+/plugin validate .                         # 마켓플레이스/플러그인 JSON 검증
 ```
 
 > 플러그인 시스템의 전체 구조와 활용법은 [25장: 플러그인](../05-advanced/07-plugins.md)을 참고하세요.

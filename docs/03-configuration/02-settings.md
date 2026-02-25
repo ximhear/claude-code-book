@@ -387,7 +387,9 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `allowManagedPermissionRulesOnly` | 관리자 권한 규칙만 적용 |
 | `allowManagedHooksOnly` | 관리자 훅만 실행 |
 | `disableAllHooks` | 모든 훅 비활성화 |
-| `strictKnownMarketplaces` | 허용된 플러그인 소스만 |
+| `strictKnownMarketplaces` | 허용된 플러그인 마켓플레이스 소스만 |
+| `extraKnownMarketplaces` | 사전 등록 마켓플레이스 (맵 형식) |
+| `enabledPlugins` | 허용 플러그인 (`name@marketplace` 맵) |
 
 ### 예시: 엔터프라이즈 잠금 설정
 
@@ -411,8 +413,14 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
     ]
   },
   "strictKnownMarketplaces": [
-    { "source": "github", "repo": "company/approved-plugins" }
-  ]
+    { "source": "github", "repo": "company/approved-plugins" },
+    { "source": "hostPattern", "hostPattern": "^github\\.company\\.com$" }
+  ],
+  "extraKnownMarketplaces": {
+    "company-tools": {
+      "source": { "source": "github", "repo": "company/approved-plugins" }
+    }
+  }
 }
 ```
 

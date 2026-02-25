@@ -126,12 +126,21 @@ SCIM (System for Cross-domain Identity Management)으로 사용자 라이프사�
 {
   "strictKnownMarketplaces": [
     { "source": "github", "repo": "company/approved-plugins" },
-    { "source": "npm", "scope": "@company" }
-  ]
+    { "source": "hostPattern", "hostPattern": "^github\\.company\\.com$" }
+  ],
+  "extraKnownMarketplaces": {
+    "company-tools": {
+      "source": { "source": "github", "repo": "company/approved-plugins" }
+    }
+  },
+  "enabledPlugins": {
+    "code-formatter@company-tools": true,
+    "security-scanner@company-tools": true
+  }
 }
 ```
 
-비인가 플러그인 소스의 설치를 차단합니다. 플러그인 시스템의 전체 구조와 엔터프라이즈 관리 방법은 [25장: 플러그인](../05-advanced/07-plugins.md)을 참고하세요.
+비인가 플러그인 소스의 설치를 차단합니다. `hostPattern`으로 특정 호스트의 모든 저장소를 허용할 수 있습니다. 플러그인 시스템의 전체 구조와 엔터프라이즈 관리 방법은 [25장: 플러그인](../05-advanced/07-plugins.md)을 참고하세요.
 
 ---
 

@@ -274,12 +274,13 @@ git commit -m "Add project rules for team"
 
 ```
 my-plugin/
+├── .claude-plugin/
+│   └── plugin.json
 ├── skills/
 │   └── ...
-├── rules/
-│   ├── company-style.md
-│   └── company-security.md
-└── plugin.json
+└── rules/
+    ├── company-style.md
+    └── company-security.md
 ```
 
 > 플러그인을 통한 규칙 배포에 대한 자세한 내용은 [25장: 플러그인](../05-advanced/07-plugins.md)을 참고하세요.
