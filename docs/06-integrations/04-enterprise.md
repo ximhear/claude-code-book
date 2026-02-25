@@ -1,6 +1,6 @@
 <!-- last_updated: 2026-02-11 -->
 
-# 28. 엔터프라이즈 설정과 팀 관리
+# 29. 엔터프라이즈 설정과 팀 관리
 
 > 조직 단위의 Claude Code 배포와 관리를 다룹니다.
 
@@ -131,7 +131,7 @@ SCIM (System for Cross-domain Identity Management)으로 사용자 라이프사�
 }
 ```
 
-비인가 플러그인 소스의 설치를 차단합니다.
+비인가 플러그인 소스의 설치를 차단합니다. 플러그인 시스템의 전체 구조와 엔터프라이즈 관리 방법은 [25장: 플러그인](../05-advanced/07-plugins.md)을 참고하세요.
 
 ---
 
@@ -209,4 +209,4 @@ Claude Code는 OpenTelemetry 트레이스를 지원합니다:
 
 ## 다음 챕터
 
-Part VII: 레시피에서 [29장: CLAUDE.md 템플릿](../07-recipes/01-claude-md-templates.md)을 통해 다양한 프로젝트 유형에 맞는 설정 예제를 배웁니다.
+Part VII: 레시피에서 [30장: CLAUDE.md 템플릿](../07-recipes/01-claude-md-templates.md)을 통해 다양한 프로젝트 유형에 맞는 설정 예제를 배웁니다.

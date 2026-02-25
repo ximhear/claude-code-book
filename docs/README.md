@@ -3,7 +3,7 @@
 > 초급부터 전문가까지 — Claude Code의 모든 것
 
 **버전**: 0.1.0
-**최종 업데이트**: 2026-02-11
+**최종 업데이트**: 2026-02-25
 **대상 Claude Code 버전**: 2.1.x (2026년 2월 기준)
 
 ---
@@ -43,18 +43,20 @@
 22. [서브에이전트와 병렬 처리](05-advanced/04-subagents.md)
 23. [에이전트 팀 (실험적 기능)](05-advanced/05-agent-teams.md)
 24. [Agent SDK (프로그래밍 인터페이스)](05-advanced/06-agent-sdk.md)
+25. [플러그인](05-advanced/07-plugins.md)
 
 ### Part VI: 통합과 배포
-25. [IDE 통합 (VS Code, JetBrains, Desktop)](06-integrations/01-ide-integrations.md)
-26. [GitHub Actions / CI·CD 통합](06-integrations/02-ci-cd.md)
-27. [클라우드 프로바이더 (Bedrock, Vertex, Foundry)](06-integrations/03-cloud-providers.md)
-28. [엔터프라이즈 설정과 팀 관리](06-integrations/04-enterprise.md)
+26. [IDE 통합 (VS Code, JetBrains, Desktop)](06-integrations/01-ide-integrations.md)
+27. [GitHub Actions / CI·CD 통합](06-integrations/02-ci-cd.md)
+28. [클라우드 프로바이더 (Bedrock, Vertex, Foundry)](06-integrations/03-cloud-providers.md)
+29. [엔터프라이즈 설정과 팀 관리](06-integrations/04-enterprise.md)
 
 ### Part VII: 실전 레시피
-29. [프로젝트별 CLAUDE.md 템플릿](07-recipes/01-claude-md-templates.md)
-30. [실전 워크플로우 패턴](07-recipes/02-workflow-patterns.md)
-31. [비용 최적화 전략](07-recipes/03-cost-optimization.md)
-32. [보안과 베스트 프랙티스](07-recipes/04-security-best-practices.md)
+30. [프로젝트별 CLAUDE.md 템플릿](07-recipes/01-claude-md-templates.md)
+31. [실전 워크플로우 패턴](07-recipes/02-workflow-patterns.md)
+32. [비용 최적화 전략](07-recipes/03-cost-optimization.md)
+33. [보안과 베스트 프랙티스](07-recipes/04-security-best-practices.md)
+34. [실전 사례: Claude Code로 이 책을 만든 과정](07-recipes/05-real-world-case-study.md)
 
 ### 부록
 - [A. 단축키 모음](08-appendix/a-keyboard-shortcuts.md)

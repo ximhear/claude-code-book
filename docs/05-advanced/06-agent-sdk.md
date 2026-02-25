@@ -226,4 +226,4 @@ async function analyzeAndFix(filePath: string) {
 
 ## 다음 챕터
 
-Part VI: 확장과 통합에서 [25장: IDE 통합](../06-integrations/01-ide-integrations.md)을 통해 VS Code, JetBrains 등에서 Claude Code를 사용하는 방법을 배웁니다.
+[25장: 플러그인](07-plugins.md)에서 Skills, Hooks, MCP 서버를 하나의 패키지로 묶어 배포하는 플러그인 시스템을 배웁니다.

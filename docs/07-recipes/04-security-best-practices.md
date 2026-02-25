@@ -1,6 +1,6 @@
 <!-- last_updated: 2026-02-11 -->
 
-# 32. 보안과 베스트 프랙티스
+# 33. 보안과 베스트 프랙티스
 
 > Claude Code를 안전하게 사용하기 위한 보안 가이드를 다룹니다.
 
@@ -248,4 +248,4 @@ claude -p "분석" --no-session-persistence
 
 ## 다음 챕터
 
-[33장: 실전 사례 — Claude Code로 이 책을 만든 과정](05-real-world-case-study.md)에서 10,000줄 기술 서적을 만들며 사용한 실제 기법을 공개합니다.
+[34장: 실전 사례 — Claude Code로 이 책을 만든 과정](05-real-world-case-study.md)에서 10,000줄 기술 서적을 만들며 사용한 실제 기법을 공개합니다.

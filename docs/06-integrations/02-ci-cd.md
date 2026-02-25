@@ -1,6 +1,6 @@
 <!-- last_updated: 2026-02-11 -->
 
-# 26. GitHub Actions / CI·CD 통합
+# 27. GitHub Actions / CI·CD 통합
 
 > CI/CD 파이프라인에서 Claude Code를 활용하는 방법을 다룹니다.
 
@@ -219,4 +219,4 @@ jobs:
 
 ## 다음 챕터
 
-[27장: 클라우드 프로바이더](03-cloud-providers.md)에서 Amazon Bedrock, Google Vertex AI, Microsoft Foundry와의 연동을 배웁니다.
+[28장: 클라우드 프로바이더](03-cloud-providers.md)에서 Amazon Bedrock, Google Vertex AI, Microsoft Foundry와의 연동을 배웁니다.

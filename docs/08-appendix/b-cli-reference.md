@@ -92,6 +92,8 @@ claude plugin remove <이름>            # 제거
 claude plugin update                   # 전체 업데이트
 ```
 
+> 플러그인 시스템의 전체 구조와 활용법은 [25장: 플러그인](../05-advanced/07-plugins.md)을 참고하세요.
+
 ---
 
 ## 환경 변수 레퍼런스

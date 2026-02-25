@@ -1,6 +1,6 @@
 <!-- last_updated: 2026-02-11 -->
 
-# 27. 클라우드 프로바이더 (Bedrock, Vertex, Foundry)
+# 28. 클라우드 프로바이더 (Bedrock, Vertex, Foundry)
 
 > Amazon Bedrock, Google Vertex AI, Microsoft Foundry와의 연동을 다룹니다.
 
@@ -219,4 +219,4 @@ Docker 기반 개발 환경에서 클라우드 프로바이더 인증을 전달�
 
 ## 다음 챕터
 
-[28장: 엔터프라이즈 설정과 팀 관리](04-enterprise.md)에서 조직 단위의 Claude Code 배포와 관리를 배웁니다.
+[29장: 엔터프라이즈 설정과 팀 관리](04-enterprise.md)에서 조직 단위의 Claude Code 배포와 관리를 배웁니다.

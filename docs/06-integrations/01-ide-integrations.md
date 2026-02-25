@@ -1,6 +1,6 @@
 <!-- last_updated: 2026-02-11 -->
 
-# 25. IDE 통합 (VS Code, JetBrains, Desktop)
+# 26. IDE 통합 (VS Code, JetBrains, Desktop)
 
 > 각 IDE와 데스크톱 앱에서의 Claude Code 사용법을 다룹니다.
 
@@ -159,4 +159,4 @@ claude --status <session-id>
 
 ## 다음 챕터
 
-[26장: GitHub Actions / CI·CD 통합](02-ci-cd.md)에서 CI/CD 파이프라인에서의 활용 방법을 배웁니다.
+[27장: GitHub Actions / CI·CD 통합](02-ci-cd.md)에서 CI/CD 파이프라인에서의 활용 방법을 배웁니다.
