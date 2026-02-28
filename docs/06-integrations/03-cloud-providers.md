@@ -61,7 +61,7 @@ export AWS_REGION=us-east-1
 | **인증** | IAM, SSO, 임시 자격증명 |
 | **비용 추적** | AWS Cost Explorer에서 확인 |
 | **모니터링** | CloudWatch 통합 |
-| **모델** | Opus 4.6, Sonnet 4.5, Haiku 4.5 |
+| **모델** | Opus 4.6, Sonnet 4.6, Haiku 4.5 |
 
 ---
 
@@ -120,7 +120,7 @@ az login
 
 ### 특징
 
-- Opus 4.6, Sonnet 4.5, Haiku 4.5 모델 지원
+- Opus 4.6, Sonnet 4.6, Haiku 4.5 모델 지원
 - Extended Thinking 포함 모든 Claude Code 기능 사용 가능
 - Azure 인프라와 통합
 - Azure RBAC (역할 기반 접근 제어) 연동

@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-02-28 -->
 
 # 부록 D: 용어집
 
@@ -22,12 +22,13 @@
 | **Hooks** | 이벤트에 반응하는 자동화 시스템 (PreToolUse, PostToolUse 등) |
 | **MCP** | Model Context Protocol. AI 도구 통합을 위한 오픈 소스 표준 |
 | **Memory** | `~/.claude/projects/<hash>/memory/`의 자동 메모리 시스템 |
-| **Opusplan** | Opus 4.6 (추론)과 Sonnet 4.5 (도구)를 결합한 하이브리드 모드 |
+| **Opusplan** | Opus 4.6 (추론)과 Sonnet 4.6 (도구)를 결합한 하이브리드 모드 |
 | **Permission Mode** | 도구 실행 권한을 제어하는 모드 (Default, Plan, Accept Edits 등) |
 | **Plan Mode** | 읽기 전용 분석 모드. 코드를 변경하지 않고 탐색만 수행 |
 | **Marketplace** | 플러그인 카탈로그. `.claude-plugin/marketplace.json`으로 정의. `claude-plugins-official`이 기본 제공 |
 | **Plugin** | Claude Code의 기능을 확장하는 패키지. `.claude-plugin/plugin.json`으로 정의하며 `name@marketplace` 형식으로 설치 |
 | **Prompt Caching** | 반복 전송되는 콘텐츠를 캐싱하여 비용과 지연 시간 절감 |
+| **Remote Control** | 로컬 세션을 모바일/웹 브라우저에서 원격 제어하는 기능. `/rc` 또는 `claude remote-control`. Max 플랜 필요 |
 | **Remote Session** | Anthropic 클라우드에서 실행되는 세션. `--remote` 플래그 또는 웹 인터페이스에서 사용 |
 | **Rules** | `.claude/rules/`의 모듈식 지침 파일. 경로 조건 지정 가능 |
 | **Sandbox** | OS 수준에서 실행 환경을 격리하는 보안 메커니즘 |

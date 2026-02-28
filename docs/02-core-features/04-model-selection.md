@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-02-28 -->
 
 # 8. 모델 선택과 전환
 
@@ -23,17 +23,18 @@ Claude Code는 세 가지 모델을 지원합니다.
 | **지식 기준일** | 2025년 5월 (신뢰), 2025년 8월 (훈련) |
 | **적합한 용도** | 아키텍처 결정, 복잡한 디버깅, 대규모 리팩토링, 멀티스텝 계획 |
 
-### Claude Sonnet 4.5 — 속도와 품질의 균형
+### Claude Sonnet 4.6 — 속도와 품질의 균형
 
 | 항목 | 내용 |
 |------|------|
-| **모델 ID** | `claude-sonnet-4-5-20250929` |
+| **모델 ID** | `claude-sonnet-4-6` |
 | **별칭** | `sonnet` |
 | **컨텍스트 윈도우** | 200K (기본) / 1M (베타) |
 | **최대 출력** | 64K 토큰 |
 | **가격** | $3 / 1M 입력, $15 / 1M 출력 |
-| **지식 기준일** | 2025년 1월 (신뢰), 2025년 7월 (훈련) |
 | **적합한 용도** | 일상적 코딩, 기능 구현, 버그 수정, 코드 리뷰 |
+
+Sonnet 4.6은 Opus 수준의 코딩 성능에 더 나은 도구 사용 안정성을 제공합니다. 사용자 비교에서 Sonnet 4.5 대비 **70%** 선호, 과도한 엔지니어링과 환각이 감소했습니다.
 
 ### Claude Haiku 4.5 — 빠르고 효율적
 
@@ -57,13 +58,13 @@ Claude Code는 세 가지 모델을 지원합니다.
 |------|------|------|
 | `default` | 계정 유형에 따라 다름 | Max/Teams: Opus, Pro: Opus |
 | `opus` | Claude Opus 4.6 | 최신 Opus |
-| `sonnet` | Claude Sonnet 4.5 | 최신 Sonnet |
+| `sonnet` | Claude Sonnet 4.6 | 최신 Sonnet |
 | `haiku` | Claude Haiku 4.5 | 최신 Haiku |
 | `opusplan` | Opus + Sonnet | 하이브리드 모드 (아래 설명) |
 | `opus[1m]` | Opus 4.6 (1M 컨텍스트) | 100만 토큰 컨텍스트 |
-| `sonnet[1m]` | Sonnet 4.5 (1M 컨텍스트) | 100만 토큰 컨텍스트 |
+| `sonnet[1m]` | Sonnet 4.6 (1M 컨텍스트) | 100만 토큰 컨텍스트 |
 
-> **특정 버전 고정**: 버전을 고정하려면 전체 모델 ID를 사용하세요 (예: `claude-sonnet-4-5-20250929`). 별칭은 업데이트 시 자동으로 최신 버전을 가리킵니다. 모델 ID의 날짜 접미사(예: `20250929`)는 새 버전 출시 시 변경될 수 있으므로, 최신 ID는 [Anthropic 공식 문서](https://docs.anthropic.com/en/docs/about-claude/models)에서 확인하세요.
+> **특정 버전 고정**: 버전을 고정하려면 전체 모델 ID를 사용하세요 (예: `claude-sonnet-4-6`). 별칭은 업데이트 시 자동으로 최신 버전을 가리킵니다. 모델 ID는 새 버전 출시 시 변경될 수 있으므로, 최신 ID는 [Anthropic 공식 문서](https://docs.anthropic.com/en/docs/about-claude/models)에서 확인하세요.
 
 ---
 
@@ -102,7 +103,7 @@ claude --model claude-opus-4-6     # 전체 모델 ID
 ```bash
 export ANTHROPIC_MODEL=opus
 export ANTHROPIC_MODEL=sonnet[1m]
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-sonnet-4-6
 
 # 셸 프로파일에 영구 설정
 echo 'export ANTHROPIC_MODEL=opus' >> ~/.zshrc
@@ -138,7 +139,7 @@ echo 'export ANTHROPIC_MODEL=opus' >> ~/.zshrc
 
 ```
 Plan 모드 (코드 분석, 계획 수립) → Opus 4.6 사용
-실행 모드 (코드 작성, 구현)     → Sonnet 4.5 사용
+실행 모드 (코드 작성, 구현)     → Sonnet 4.6 사용
 ```
 
 ### 왜 Opusplan을 사용하는가?
@@ -196,7 +197,7 @@ claude --model sonnet[1m]
 | 모델 | 1M 컨텍스트 | 기본 컨텍스트 |
 |------|:-----------:|:------------:|
 | Opus 4.6 | 지원 (베타) | 200K |
-| Sonnet 4.5 | 지원 (베타) | 200K |
+| Sonnet 4.6 | 지원 (베타) | 200K |
 | Haiku 4.5 | 미지원 | 200K |
 
 ### 언제 1M 컨텍스트가 필요한가
@@ -288,11 +289,11 @@ export CLAUDE_CODE_USE_BEDROCK=1
 export AWS_REGION=us-east-1
 
 # 기본 모델 변경
-export ANTHROPIC_MODEL='global.anthropic.claude-sonnet-4-5-20250929-v1:0'
+export ANTHROPIC_MODEL='global.anthropic.claude-sonnet-4-6-v1:0'
 ```
 
 Bedrock에서의 모델 ID 형식:
-- `global.anthropic.claude-sonnet-4-5-20250929-v1:0`
+- `global.anthropic.claude-sonnet-4-6-v1:0`
 - `us.anthropic.claude-haiku-4-5-20251001-v1:0`
 - 추론 프로파일 ID 또는 애플리케이션 추론 프로파일 ARN 사용 가능
 
@@ -305,11 +306,11 @@ export ANTHROPIC_VERTEX_PROJECT_ID=YOUR-PROJECT-ID
 ```
 
 Vertex AI에서의 모델 ID 형식:
-- `claude-sonnet-4-5@20250929`
+- `claude-sonnet-4-6`
 - `claude-haiku-4-5@20251001`
 - `claude-opus-4-6`
 
-1M 컨텍스트: `context-1m-2025-08-07` 베타 헤더로 지원 (Sonnet 4.5, Opus 4.6).
+1M 컨텍스트: `context-1m-2025-08-07` 베타 헤더로 지원 (Sonnet 4.6, Opus 4.6).
 
 ### Microsoft Foundry
 
@@ -320,7 +321,7 @@ export ANTHROPIC_FOUNDRY_RESOURCE={resource}
 export ANTHROPIC_FOUNDRY_BASE_URL=https://{resource}.services.ai.azure.com/anthropic
 
 # 기본 모델 지정
-export ANTHROPIC_DEFAULT_SONNET_MODEL='claude-sonnet-4-5'
+export ANTHROPIC_DEFAULT_SONNET_MODEL='claude-sonnet-4-6'
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-6'
 ```
 
@@ -368,7 +369,7 @@ Claude Code는 레이트 리밋 상황에서 자동으로 모델을 전환합니
 
 | 주제 | 핵심 포인트 |
 |------|------------|
-| **모델** | Opus 4.6 (최강), Sonnet 4.5 (균형), Haiku 4.5 (빠름) |
+| **모델** | Opus 4.6 (최강), Sonnet 4.6 (균형), Haiku 4.5 (빠름) |
 | **별칭** | `opus`, `sonnet`, `haiku`, `opusplan`, `sonnet[1m]`, `opus[1m]` |
 | **전환 방법** | `/model`, `--model`, `ANTHROPIC_MODEL`, settings.json, Option+P |
 | **우선순위** | `/model` > `--model` > 환경 변수 > settings 파일 |

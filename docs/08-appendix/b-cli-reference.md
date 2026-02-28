@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-02-28 -->
 
 # 부록 B: CLI 레퍼런스
 
@@ -25,6 +25,7 @@ claude [옵션] [초기 프롬프트]
 | `--fork-session` | 세션 포크 (`--continue`/`--resume`와 함께) |
 | `--teleport` | 웹 세션을 터미널로 이전 |
 | `--from-pr <PR>` | PR 컨텍스트로 세션 시작 |
+| `-w`, `--worktree [이름]` | 격리된 Git worktree에서 세션 시작 |
 | `--no-session-persistence` | 세션 저장 안 함 |
 
 ### 모델과 추론
@@ -69,6 +70,17 @@ claude [옵션] [초기 프롬프트]
 claude config list                    # 설정 목록
 claude config get <키>                # 설정 값 확인
 claude config set <키> <값>           # 설정 변경
+```
+
+### `claude auth`
+
+```bash
+claude auth login                       # 로그인
+claude auth login --email user@co.com   # 이메일 지정 로그인
+claude auth login --sso                 # SSO 로그인
+claude auth status                      # 인증 상태 확인
+claude auth status --text               # 텍스트 출력 (종료 코드: 0=로그인, 1=미로그인)
+claude auth logout                      # 로그아웃
 ```
 
 ### `claude mcp`

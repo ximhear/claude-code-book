@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-02-28 -->
 
 # 17. 세션 관리와 이어서 작업하기
 
@@ -337,6 +337,78 @@ Claude는 컨텍스트 한도에 근접하면 **자동으로 압축**합니다:
 
 ---
 
+## Remote Control — 모바일/웹에서 원격 제어
+
+로컬에서 실행 중인 Claude Code 세션을 **폰, 태블릿, 또는 다른 컴퓨터의 브라우저**에서 제어하는 기능입니다. 코드 실행은 로컬 머신에서 이루어지고, 채팅 메시지와 도구 결과만 Anthropic API를 통해 TLS로 암호화되어 전달됩니다.
+
+### 시작 방법
+
+```bash
+# 터미널에서 새 Remote Control 세션 시작
+claude remote-control
+
+# 기존 세션에서 Remote Control 활성화 (대화 이력 유지)
+> /remote-control
+# 또는 축약형
+> /rc
+```
+
+세션 URL과 QR 코드가 표시됩니다. 스페이스바로 QR 코드를 토글할 수 있습니다.
+
+### 연결 방법
+
+| 방법 | 설명 |
+|------|------|
+| **URL 열기** | 표시된 세션 URL을 아무 브라우저에서 열기 |
+| **QR 코드 스캔** | Claude 모바일 앱(iOS/Android)으로 스캔 |
+| **claude.ai/code** | 세션 목록에서 이름으로 찾기 (컴퓨터 아이콘 + 녹색 상태 표시) |
+
+> `/mobile`을 입력하면 Claude 앱 다운로드 QR 코드가 표시됩니다.
+
+### 플래그
+
+```bash
+claude remote-control --verbose        # 상세 연결/세션 로그
+claude remote-control --sandbox        # 샌드박스 활성화
+claude remote-control --no-sandbox     # 샌드박스 비활성화
+```
+
+### 요구사항
+
+- **구독**: Max 플랜 필요 (Pro 지원 예정). API 키 미지원
+- **인증**: `/login`으로 claude.ai 로그인 필요
+- **워크스페이스**: 프로젝트 디렉토리에서 `claude`를 한 번 이상 실행하여 워크스페이스 트러스트 수락 필요
+
+### 보안 모델
+
+- **아웃바운드 HTTPS만** 사용 — 인바운드 포트를 열지 않음
+- 모든 트래픽은 Anthropic API를 통해 TLS로 전송
+- 다수의 **단기 자격증명** 사용 (각각 단일 목적, 독립 만료)
+
+### 전체 세션 활성화
+
+```bash
+> /config
+# "Enable Remote Control for all sessions" → true
+```
+
+### 제한사항
+
+- 인스턴스당 **1개** 원격 세션
+- 터미널을 닫거나 `claude` 프로세스를 종료하면 세션 종료
+- 네트워크 끊김이 **~10분** 이상 지속되면 타임아웃
+
+### Remote Control vs Claude Code on the Web
+
+| | Remote Control | Claude Code on the Web |
+|---|:---:|:---:|
+| **실행 환경** | 로컬 머신 | Anthropic 클라우드 VM |
+| **MCP 서버** | 로컬 설정 유지 | 사용 불가 |
+| **프로젝트 설정** | `.claude/` 그대로 사용 | 별도 환경 |
+| **적합한 경우** | 로컬 작업 중 이동 | 로컬 환경 없이 작업 |
+
+---
+
 ## 세션 전략
 
 ### 작업 단위별 세션
@@ -389,6 +461,7 @@ claude
 | **포크** | `--fork-session`으로 세션 복사, 독립적 진행 |
 | **`/rewind`** | `Esc+Esc`로 이전 체크포인트 복원 |
 | **`/teleport`** | 웹 세션을 터미널로 이전 |
+| **Remote Control** | `/rc`로 모바일/웹에서 로컬 세션 원격 제어. Max 플랜 필요 |
 | **`/compact`** | 대화 압축, 자동 압축도 지원 |
 | **`/context`** | 컨텍스트 사용량 모니터링 |
 

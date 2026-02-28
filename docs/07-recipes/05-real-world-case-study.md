@@ -399,7 +399,7 @@ For each chapter, analyze:
 ## 프로젝트 규칙
 - 대상: Claude Code v2.1.x (2026년 2월)
 - 언어: 한국어
-- 모델: Opus 4.6, Sonnet 4.5, Haiku 4.5
+- 모델: Opus 4.6, Sonnet 4.6, Haiku 4.5
 - 각 챕터에 last_updated 메타데이터 포함
 - 코드 예제는 실행 가능하게 작성
 - 챕터 끝에 "다음 챕터" 링크 필수

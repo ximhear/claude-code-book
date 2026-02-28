@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-02-28 -->
 
 # 20. Hooks — 이벤트 기반 자동화
 
@@ -21,12 +21,22 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | 이벤트 | 발생 시점 | 용도 |
 |--------|----------|------|
 | **PreToolUse** | 도구 실행 전 | 검증, 차단, 수정 |
-| **PostToolUse** | 도구 실행 후 | 포매팅, 검증, 알림 |
+| **PostToolUse** | 도구 실행 성공 후 | 포매팅, 검증, 알림 |
+| **PostToolUseFailure** | 도구 실행 실패 후 | 에러 처리, 로깅 |
+| **PermissionRequest** | 권한 대화상자 표시 시 | 자동 승인/거부 |
 | **Notification** | Claude가 알림 발송 시 | 데스크톱 알림, 로깅 |
 | **SessionStart** | 세션 시작/재개 시 | 환경 설정, 컨텍스트 주입 |
+| **SessionEnd** | 세션 종료 시 | 정리, 로깅 |
 | **UserPromptSubmit** | 사용자 프롬프트 제출 시 | 입력 검증, 변환 |
 | **Stop** | Claude 응답 완료 시 | 후처리, 알림 |
+| **SubagentStart** | 서브에이전트 생성 시 | 추적, 설정 |
 | **SubagentStop** | 서브에이전트 완료 시 | 결과 처리 |
+| **TeammateIdle** | 팀 에이전트가 유휴 전환 시 | 종료 코드 2로 유휴 방지 가능 |
+| **TaskCompleted** | 태스크 완료 표시 시 | 종료 코드 2로 완료 차단 가능 |
+| **ConfigChange** | 설정 파일 변경 시 | 감사, 보안 정책 적용 |
+| **WorktreeCreate** | Worktree 생성 시 | 비-Git VCS 지원 (stdout으로 경로 반환) |
+| **WorktreeRemove** | Worktree 제거 시 | VCS 정리 |
+| **PreCompact** | 컨텍스트 압축 전 | 압축 전 처리 |
 
 ---
 
@@ -53,10 +63,15 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | 필드 | 필수 | 설명 |
 |------|:----:|------|
 | `event` | O | 이벤트 유형 |
-| `type` | O | `"command"` (셸 명령어) |
-| `command` | O | 실행할 명령어 또는 스크립트 경로 |
+| `type` | O | `"command"` (셸 명령어) 또는 `"http"` (HTTP POST) |
+| `command` | △ | `type: "command"`일 때 실행할 명령어 또는 스크립트 경로 |
+| `url` | △ | `type: "http"`일 때 POST 요청 대상 URL |
+| `headers` | | HTTP 훅 전용. 추가 헤더 (`$VAR_NAME` 환경변수 보간 지원) |
+| `allowedEnvVars` | | HTTP 훅 전용. 헤더에서 보간 허용할 환경변수 목록 |
 | `matcher` | | 도구 이름 필터 (정규식) |
 | `timeout` | | 실행 시간 제한 (초) |
+
+> △ = `type`에 따라 필수. `command` 타입이면 `command`, `http` 타입이면 `url` 필수.
 
 ### 매처 패턴
 
@@ -251,6 +266,39 @@ fi
 exit 0
 ```
 
+### HTTP 훅 (PreToolUse)
+
+외부 서비스로 HTTP POST를 전송하는 웹훅 방식 훅입니다:
+
+```json
+{
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "type": "http",
+      "url": "http://localhost:8080/hooks/pre-tool-use",
+      "timeout": 30,
+      "headers": {
+        "Authorization": "Bearer $MY_TOKEN"
+      },
+      "allowedEnvVars": ["MY_TOKEN"]
+    }
+  ]
+}
+```
+
+HTTP 훅의 응답 처리:
+
+| 응답 | 동작 |
+|------|------|
+| 2xx + 빈 바디 | 성공 (종료 코드 0과 동일) |
+| 2xx + 텍스트 바디 | 성공, 텍스트가 컨텍스트에 추가 |
+| 2xx + JSON 바디 | 성공, 표준 JSON 출력 스키마로 파싱 |
+| non-2xx / 연결 실패 / 타임아웃 | **비차단 에러** — 실행 계속 진행 |
+
+> command 훅과 달리 HTTP 훅은 연결 실패 시 **비차단**입니다. 도구 실행을 차단하려면 2xx 응답에서 `"decision": "block"`을 반환해야 합니다.
+
 ---
 
 ## 설정 범위
@@ -304,7 +352,8 @@ exit 0
 
 | 주제 | 핵심 포인트 |
 |------|------------|
-| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 7가지 |
+| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 17가지 |
+| **훅 타입** | `command` (셸 명령어) 또는 `http` (HTTP POST) |
 | **설정** | settings.json의 `hooks` 배열 |
 | **매처** | 정규식으로 도구 이름 필터링 |
 | **입력** | stdin으로 JSON (도구 이름, 입력, 결과) |

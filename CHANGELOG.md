@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.0] - 2026-02-28
+### Added
+- 17장: Remote Control 섹션 추가 (모바일/웹 원격 제어, 보안 모델, 요구사항, 제한사항)
+- 20장: HTTP 훅 타입 추가 (`type: "http"`, URL/헤더/환경변수 보간), 10개 신규 이벤트 추가 (총 17개)
+- CLI 레퍼런스: `claude auth` 서브커맨드 (login/status/logout), `--worktree` 플래그
+- 15장: `--worktree` CLI 플래그 사용법 추가
+- 22장: 서브에이전트 Worktree 격리 (`isolation: worktree`) 섹션 추가
+- 용어집: Remote Control 용어 추가
+### Changed
+- Sonnet 4.5 → Sonnet 4.6 전체 업데이트 (모델 ID, 별칭, 가격표, 클라우드 프로바이더 등 8개 파일)
+
 ## [0.3.0] - 2026-02-25
 ### Changed
 - 25장 플러그인 챕터를 공식 문서 기반으로 전면 수정

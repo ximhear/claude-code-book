@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-02-28 -->
 
 # 22. 서브에이전트와 병렬 처리
 
@@ -189,6 +189,42 @@ $ARGUMENTS에 대한 보안 스캔을 수행해주세요.
 > 이전 보안 분석 에이전트에게 추가 질문이 있어
 # Claude가 해당 서브에이전트의 컨텍스트를 재개
 ```
+
+---
+
+## Worktree 격리
+
+서브에이전트를 독립적인 Git worktree에서 실행하여 파일 충돌을 방지할 수 있습니다.
+
+### 설정
+
+에이전트 프론트매터에 `isolation: worktree`를 지정합니다:
+
+```yaml
+---
+name: refactor-agent
+description: 독립된 worktree에서 리팩토링 수행
+isolation: worktree
+---
+```
+
+### 동작 방식
+
+```
+메인 세션 (원본 저장소)
+├── 서브에이전트 A (worktree-a/) — 독립 작업
+├── 서브에이전트 B (worktree-b/) — 독립 작업
+└── 결과 병합
+```
+
+- 각 서브에이전트가 `.claude/worktrees/` 아래 별도의 worktree에서 작업합니다
+- 서브에이전트 간 파일 수정 충돌이 없습니다
+- 변경이 없으면 worktree가 **자동 정리**됩니다
+- 변경이 있으면 worktree 경로와 브랜치가 결과에 포함됩니다
+
+### 비-Git VCS 지원
+
+Git 이외의 VCS를 사용하는 경우, `WorktreeCreate`와 `WorktreeRemove` 훅으로 격리 환경을 제공할 수 있습니다. 자세한 내용은 [20장: Hooks](02-hooks.md)를 참고하세요.
 
 ---
 

@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-02-28 -->
 
 # 14. Git 통합과 PR 워크플로우
 
@@ -216,7 +216,25 @@ Claude의 충돌 해결 과정:
 
 Git worktree는 하나의 저장소에서 **여러 작업 디렉토리를 동시에** 유지하는 Git 기능입니다. 각 worktree에서 독립적인 Claude 세션을 실행할 수 있습니다.
 
-### 설정
+### `--worktree` 플래그로 시작
+
+Claude Code에 내장된 `--worktree` (`-w`) 플래그로 격리된 worktree를 자동 생성할 수 있습니다:
+
+```bash
+# 이름을 지정하여 worktree 생성
+claude --worktree feature-auth
+
+# 이름 생략 시 자동 생성 (worktree-<랜덤>)
+claude --worktree
+claude -w
+```
+
+- worktree는 `<repo>/.claude/worktrees/<이름>/`에 생성됩니다
+- 현재 HEAD를 기준으로 새 브랜치가 생성됩니다
+- 세션 종료 시 변경이 없으면 **자동 삭제**, 변경이 있으면 유지/삭제 여부를 묻습니다
+- `.gitignore`에 `.claude/worktrees/`를 추가하는 것을 권장합니다
+
+### 수동 Git 명령어로 설정
 
 ```bash
 # 기능 개발용 worktree 생성
