@@ -39,4 +39,6 @@
 | **Tool Search** | MCP 도구가 컨텍스트의 10% 초과 시 자동 활성화되는 동적 도구 검색 메커니즘 |
 | **Tool Specifier** | 권한 규칙에서 도구를 지정하는 패턴 (예: `Bash(npm run *)`) |
 | **Transcript** | Claude의 내부 사고 과정과 도구 사용을 표시하는 상세 로그. `Ctrl+O`로 토글 |
+| **Ultrathink** | 프롬프트에 포함하면 다음 턴에 Opus 4.6의 high effort가 활성화되는 키워드 |
+| **Voice Mode** | `/voice`로 활성화하는 음성 입력 모드. 스페이스바 push-to-talk으로 프롬프트 입력 |
 | **Worktree** | Git의 기능으로, 하나의 저장소에서 여러 작업 디렉토리를 동시에 유지 |

@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-25 -->
+<!-- last_updated: 2026-03-06 -->
 
 # 25. 플러그인
 
@@ -74,6 +74,9 @@ Anthropic의 공식 마켓플레이스(`claude-plugins-official`)에는 **60개 
 
 # 유효성 검증
 /plugin validate .                         # 마켓플레이스/플러그인 JSON 검증
+
+# 플러그인 변경 즉시 반영
+/reload-plugins                            # 재시작 없이 대기 중인 플러그인 변경 활성화
 ```
 
 > `/plugin market`은 `/plugin marketplace`의 축약형, `rm`은 `remove`의 축약형입니다.
@@ -363,6 +366,7 @@ my-marketplace/
 | **Git URL** | `{ "source": "url", "url": "https://gitlab.com/org/repo.git" }` | 임의 Git URL |
 | **npm** | `{ "source": "npm", "package": "@company/plugin", "version": "^2.0" }` | npm 패키지 |
 | **pip** | `{ "source": "pip", "package": "claude-plugin-x" }` | pip 패키지 |
+| **Git 서브디렉토리** | `{ "source": "git-subdir", "url": "...", "subdir": "plugins/foo" }` | Git 저장소 내 특정 하위 디렉토리 |
 
 > 상대 경로는 Git 또는 로컬 경로로 추가된 마켓플레이스에서만 동작합니다. URL로 `marketplace.json`을 직접 가리키는 경우 상대 경로가 해석되지 않습니다.
 
@@ -430,12 +434,13 @@ my-marketplace/
 {
   "strictKnownMarketplaces": [
     { "source": "github", "repo": "company/approved-plugins" },
-    { "source": "hostPattern", "hostPattern": "^github\\.company\\.com$" }
+    { "source": "hostPattern", "hostPattern": "^github\\.company\\.com$" },
+    { "source": "pathPattern", "pathPattern": "^/approved/plugins/" }
   ]
 }
 ```
 
-이 설정이 활성화되면 목록에 없는 소스에서의 마켓플레이스 추가가 거부됩니다. `hostPattern`을 사용하면 특정 호스트의 모든 저장소를 허용할 수 있습니다.
+이 설정이 활성화되면 목록에 없는 소스에서의 마켓플레이스 추가가 거부됩니다. `hostPattern`은 특정 호스트의 모든 저장소를, `pathPattern`은 파일/디렉토리 경로를 정규식으로 허용합니다.
 
 ### enabledPlugins
 
@@ -466,6 +471,16 @@ my-marketplace/
 | **Windows** | `%ProgramData%\ClaudeCode\` |
 
 관리자 경로의 설정은 사용자 설정보다 우선하며, 사용자가 변경할 수 없습니다.
+
+### pluginTrustMessage
+
+관리 설정에서 플러그인 트러스트 경고에 조직별 메시지를 추가할 수 있습니다:
+
+```json
+{
+  "pluginTrustMessage": "사내 승인 플러그인만 설치하세요. 미승인 플러그인은 보안팀(security@company.com)에 문의하세요."
+}
+```
 
 ---
 

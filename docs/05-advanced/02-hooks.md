@@ -37,6 +37,7 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | **WorktreeCreate** | Worktree 생성 시 | 비-Git VCS 지원 (stdout으로 경로 반환) |
 | **WorktreeRemove** | Worktree 제거 시 | VCS 정리 |
 | **PreCompact** | 컨텍스트 압축 전 | 압축 전 처리 |
+| **InstructionsLoaded** | CLAUDE.md / rules 파일 로드 시 | 지침 감사, 동적 규칙 주입 |
 
 ---
 
@@ -87,6 +88,18 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 매처를 생략하면 해당 이벤트의 모든 도구 호출에 실행됩니다.
 
 > **참고**: `SessionStart`, `Stop`, `Notification` 같은 **라이프사이클 이벤트**는 특정 도구와 관련이 없으므로 `matcher` 필드가 무시됩니다. 이 이벤트들에 매처를 설정해도 효과가 없습니다.
+
+### 훅 이벤트 공통 필드
+
+모든 훅 이벤트의 stdin JSON에는 다음 공통 필드가 포함됩니다:
+
+| 필드 | 설명 |
+|------|------|
+| `session_id` | 현재 세션 ID |
+| `agent_id` | 이벤트를 발생시킨 에이전트 ID (메인 또는 서브에이전트) |
+| `agent_type` | 에이전트 유형 (`"main"`, `"subagent"`, `"background"` 등) |
+
+`agent_id`와 `agent_type`을 활용하면 서브에이전트별로 다른 훅 동작을 구현할 수 있습니다.
 
 ---
 
@@ -352,7 +365,7 @@ HTTP 훅의 응답 처리:
 
 | 주제 | 핵심 포인트 |
 |------|------------|
-| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 17가지 |
+| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 18가지 |
 | **훅 타입** | `command` (셸 명령어) 또는 `http` (HTTP POST) |
 | **설정** | settings.json의 `hooks` 배열 |
 | **매처** | 정규식으로 도구 이름 필터링 |

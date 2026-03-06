@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.0] - 2026-03-06
+### Added
+- 5장: Voice Mode (`/voice`) 섹션 추가 — push-to-talk, 20개 언어, STT 무료
+- 5장: `/simplify`, `/batch` 번들 슬래시 커맨드 섹션 추가
+- 5장: `/copy` 코드 블록 피커 기능 설명 보강
+- 8장: Opus 4.6 기본 노력 수준 medium, "ultrathink" 키워드 설명
+- 10장: `sandbox.enableWeakerNetworkIsolation`, `includeGitInstructions` 설정 키
+- 10장: `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS`, `ENABLE_CLAUDEAI_MCP_SERVERS` 환경 변수
+- 13장: Auto-memory 자동 저장, worktree 간 프로젝트 설정/메모리 공유
+- 20장: `InstructionsLoaded` 훅 이벤트, `agent_id`/`agent_type` 공통 필드
+- 25장: `git-subdir` 소스 타입, `pathPattern`, `/reload-plugins`, `pluginTrustMessage`
+- 용어집: Voice Mode, Ultrathink 용어 추가
+- CLI 레퍼런스: 신규 환경 변수 2개
+
 ## [0.4.0] - 2026-02-28
 ### Added
 - 17장: Remote Control 섹션 추가 (모바일/웹 원격 제어, 보안 모델, 요구사항, 제한사항)

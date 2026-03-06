@@ -154,6 +154,8 @@ claude mcp remove <이름>                   # 서버 제거
 | `CLAUDE_CODE_TASK_LIST_ID` | 공유 태스크 리스트 |
 | `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` | 백그라운드 태스크 비활성화 |
 | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` | 에이전트 팀 활성화 |
+| `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` | 내장 Git 커밋/PR 지침 비활성화 |
+| `ENABLE_CLAUDEAI_MCP_SERVERS` | claude.ai MCP 서버 사용 (`false`로 비활성화) |
 
 ### 보안
 

@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-03-06 -->
 
 # 10. settings.json 설정 가이드
 
@@ -165,6 +165,31 @@ Claude Code 세션에서 사용할 환경 변수를 정의합니다.
 
 Bash 명령어 실행 시 OS 수준 샌드박싱을 활성화합니다.
 
+macOS에서 MITM 프록시(기업 프록시 등)로 인해 TLS 인증서 검증 오류가 발생하면:
+
+```json
+{
+  "sandbox": {
+    "enabled": true,
+    "enableWeakerNetworkIsolation": true
+  }
+}
+```
+
+`enableWeakerNetworkIsolation`은 Go 프로그램(gh, gcloud, terraform 등)이 커스텀 CA 인증서를 사용할 수 있게 합니다.
+
+### Git 지침 제어 (includeGitInstructions)
+
+```json
+{
+  "includeGitInstructions": false
+}
+```
+
+Claude Code의 내장 Git 커밋/PR 워크플로우 지침을 제거합니다. CLAUDE.md에서 자체 Git 워크플로우를 정의할 때 내장 지침과의 충돌을 방지합니다.
+
+환경 변수로도 설정할 수 있습니다: `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS=1`
+
 ### 추가 디렉토리 (additionalDirectories)
 
 ```json
@@ -264,6 +289,8 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `CLAUDE_CODE_SHELL` | 셸 오버라이드 | 자동 감지 |
 | `CLAUDE_CODE_TASK_LIST_ID` | 공유 태스크 리스트 ID | — |
 | `SLASH_COMMAND_TOOL_CHAR_BUDGET` | 스킬 컨텍스트 예산 | 자동 (2%) |
+| `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` | 내장 Git 지침 비활성화 | — |
+| `ENABLE_CLAUDEAI_MCP_SERVERS` | claude.ai MCP 서버 사용 (`false`로 비활성화) | true |
 
 ### 훅 관련
 
@@ -272,6 +299,7 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `CLAUDE_ENV_FILE` | SessionStart 훅에서 환경 파일 경로 |
 | `CLAUDE_PROJECT_DIR` | 훅에서 프로젝트 루트 |
 | `CLAUDE_PLUGIN_ROOT` | 훅에서 플러그인 디렉토리 |
+| `CLAUDE_SKILL_DIR` | SKILL.md에서 자기 디렉토리 참조 (`${CLAUDE_SKILL_DIR}`) |
 
 ### 보안
 
