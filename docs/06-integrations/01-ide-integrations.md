@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-03-11 -->
 
 # 26. IDE 통합 (VS Code, JetBrains, Desktop)
 
@@ -23,6 +23,11 @@ VS Code Marketplace에서 **Claude Code** 확장을 설치합니다.
 | **Plan 리뷰** | 계획을 검토한 후 승인 |
 | **Auto-Accept** | 편집 자동 승인 모드 |
 | **대화 이력** | 이전 대화 검색과 재개 |
+| **Spark 아이콘** | Activity Bar에서 모든 Claude Code 세션을 전체 에디터로 열기 |
+| **MCP 관리** | 설정 UI에서 MCP 서버 추가/제거/설정 (채팅 패널에서 `/mcp`) |
+| **Plan 마크다운 뷰** | Plan 모드 결과를 마크다운 문서로 렌더링, 코멘트 지원 |
+| **URI 핸들러** | `vscode://anthropic.claude-code/open?prompt=...&session=...`로 외부에서 실행 |
+| **노력 수준 표시** | 입력 테두리에 현재 노력 수준 인디케이터 표시 |
 
 ### 사용법
 
@@ -149,7 +154,7 @@ claude --status <session-id>
 
 | 플랫폼 | 상태 | 특징 |
 |--------|:----:|------|
-| **VS Code** | 공식 | 채팅 패널, 인라인 diff, @-멘션 |
+| **VS Code** | 공식 | 채팅 패널, 인라인 diff, @-멘션, Spark 아이콘, MCP 관리, Plan 뷰, URI 핸들러 |
 | **JetBrains** | 공식 (Beta) | 통합 터미널, diff 뷰어 |
 | **Desktop** | 공식 | 시각적 세션 관리, worktree |
 | **Web** | 공식 | 클라우드 VM, 팀 협업 |

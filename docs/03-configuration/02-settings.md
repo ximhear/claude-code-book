@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-06 -->
+<!-- last_updated: 2026-03-11 -->
 
 # 10. settings.json 설정 가이드
 
@@ -291,6 +291,7 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `SLASH_COMMAND_TOOL_CHAR_BUDGET` | 스킬 컨텍스트 예산 | 자동 (2%) |
 | `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` | 내장 Git 지침 비활성화 | — |
 | `ENABLE_CLAUDEAI_MCP_SERVERS` | claude.ai MCP 서버 사용 (`false`로 비활성화) | true |
+| `CLAUDE_CODE_DISABLE_CRON` | `/loop`의 Cron 스케줄링 비활성화 | — |
 
 ### 훅 관련
 
@@ -398,8 +399,11 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | **HistorySearch** | `historySearch:next` | Ctrl+R |
 | | `historySearch:accept` | Escape, Tab |
 | **Task** | `task:background` | Ctrl+B |
+| **Voice** | `voice:pushToTalk` | Space |
 
 전체 액션 목록은 `/keybindings` 명령어로 확인할 수 있습니다.
+
+> **Voice Mode 키 변경**: push-to-talk 키를 스페이스바 이외의 키로 변경하려면 `voice:pushToTalk`을 재설정합니다.
 
 ---
 

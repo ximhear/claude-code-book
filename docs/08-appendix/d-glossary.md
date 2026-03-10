@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-28 -->
+<!-- last_updated: 2026-03-11 -->
 
 # 부록 D: 용어집
 
@@ -20,6 +20,7 @@
 | **Fork** | 세션을 복사하여 독립적으로 진행. `--fork-session` |
 | **Headless Mode** | `-p` 플래그로 실행하는 비대화형 모드 |
 | **Hooks** | 이벤트에 반응하는 자동화 시스템 (PreToolUse, PostToolUse 등) |
+| **Loop** | `/loop`로 프롬프트를 반복 실행하는 스케줄링 기능. 시간 간격 또는 Cron 표현식 지원 |
 | **MCP** | Model Context Protocol. AI 도구 통합을 위한 오픈 소스 표준 |
 | **Memory** | `~/.claude/projects/<hash>/memory/`의 자동 메모리 시스템 |
 | **Opusplan** | Opus 4.6 (추론)과 Sonnet 4.6 (도구)를 결합한 하이브리드 모드 |

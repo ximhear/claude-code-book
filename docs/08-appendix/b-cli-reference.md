@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-28 -->
+<!-- last_updated: 2026-03-11 -->
 
 # 부록 B: CLI 레퍼런스
 
@@ -156,6 +156,7 @@ claude mcp remove <이름>                   # 서버 제거
 | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` | 에이전트 팀 활성화 |
 | `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` | 내장 Git 커밋/PR 지침 비활성화 |
 | `ENABLE_CLAUDEAI_MCP_SERVERS` | claude.ai MCP 서버 사용 (`false`로 비활성화) |
+| `CLAUDE_CODE_DISABLE_CRON` | `/loop`의 Cron 스케줄링 비활성화 |
 
 ### 보안
 

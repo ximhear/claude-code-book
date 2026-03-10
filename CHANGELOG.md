@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0] - 2026-03-11
+### Added
+- 5장: `/loop` 반복 프롬프트 실행 섹션 추가 (시간 간격, Cron 스케줄링, cancel)
+- 5장: `/color` 색상 변경 섹션 추가 (reset, default, gray, none 옵션)
+- 5장: `/plan` 설명 인자 지원, `/copy` `w` 키 파일 쓰기
+- 5장: Voice Mode `voice:pushToTalk` 키바인딩 재설정 안내
+- 8장: 노력 수준 시각적 표시 (○ ◐ ●), "max" 수준 제거 명시
+- 10장: `voice:pushToTalk` 키바인딩, `CLAUDE_CODE_DISABLE_CRON` 환경 변수
+- 22장: `ExitWorktree` 도구 설명
+- 26장: VS Code Spark 아이콘, MCP 관리, Plan 마크다운 뷰, URI 핸들러, 노력 수준 표시
+- 용어집: Loop 용어 추가
+- CLI 레퍼런스: `CLAUDE_CODE_DISABLE_CRON` 환경 변수
+
 ## [0.5.0] - 2026-03-06
 ### Added
 - 5장: Voice Mode (`/voice`) 섹션 추가 — push-to-talk, 20개 언어, STT 무료

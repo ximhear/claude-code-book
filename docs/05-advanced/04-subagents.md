@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-28 -->
+<!-- last_updated: 2026-03-11 -->
 
 # 22. 서브에이전트와 병렬 처리
 
@@ -221,6 +221,10 @@ isolation: worktree
 - 서브에이전트 간 파일 수정 충돌이 없습니다
 - 변경이 없으면 worktree가 **자동 정리**됩니다
 - 변경이 있으면 worktree 경로와 브랜치가 결과에 포함됩니다
+
+### Worktree 세션 종료
+
+`EnterWorktree`로 진입한 격리 환경에서 작업이 완료되면 `ExitWorktree` 도구를 사용하여 명시적으로 세션을 종료할 수 있습니다.
 
 ### 비-Git VCS 지원
 
