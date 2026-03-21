@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-11 -->
+<!-- last_updated: 2026-03-21 -->
 
 # 29. 엔터프라이즈 설정과 팀 관리
 
@@ -218,4 +218,4 @@ Claude Code는 OpenTelemetry 트레이스를 지원합니다:
 
 ## 다음 챕터
 
-Part VII: 레시피에서 [30장: CLAUDE.md 템플릿](../07-recipes/01-claude-md-templates.md)을 통해 다양한 프로젝트 유형에 맞는 설정 예제를 배웁니다.
+[30장: Channels — 외부 플랫폼 연동](05-channels.md)에서 Telegram, Discord 등 외부 메시징 플랫폼과의 연동 방법을 배웁니다.

@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-11 -->
+<!-- last_updated: 2026-03-21 -->
 
 # 10. settings.json 설정 가이드
 
@@ -178,6 +178,8 @@ macOS에서 MITM 프록시(기업 프록시 등)로 인해 TLS 인증서 검증 
 
 `enableWeakerNetworkIsolation`은 Go 프로그램(gh, gcloud, terraform 등)이 커스텀 CA 인증서를 사용할 수 있게 합니다.
 
+`denyRead`로 읽기를 차단한 영역 내에서 `allowRead`로 특정 경로를 다시 허용할 수 있습니다. 자세한 내용은 아래 "샌드박스 읽기 허용" 섹션을 참조하세요.
+
 ### Git 지침 제어 (includeGitInstructions)
 
 ```json
@@ -219,6 +221,55 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 ```
 
 동적으로 API 키를 생성하는 스크립트를 지정합니다.
+
+### 모델 오버라이드 (modelOverrides)
+
+```json
+{
+  "modelOverrides": {
+    "opus": "us.anthropic.claude-opus-4-6-v1:0",
+    "sonnet": "us.anthropic.claude-sonnet-4-6-v1:0"
+  }
+}
+```
+
+모델 선택기의 별칭을 커스텀 프로바이더 ID에 매핑합니다. Bedrock ARN이나 Vertex AI 모델 ID 등 클라우드 프로바이더 고유 식별자를 사용할 때 유용합니다.
+
+### 자동 메모리 디렉토리 (autoMemoryDirectory)
+
+```json
+{
+  "autoMemoryDirectory": "/path/to/custom/memory"
+}
+```
+
+자동 메모리 파일이 저장되는 디렉토리를 변경합니다. 기본값은 `~/.claude/projects/<hash>/memory/`입니다.
+
+### 샌드박스 읽기 허용 (allowRead)
+
+`denyRead`로 차단된 영역 내에서 특정 경로의 읽기를 다시 허용합니다:
+
+```json
+{
+  "sandbox": {
+    "enabled": true,
+    "denyRead": ["/etc"],
+    "allowRead": ["/etc/hosts"]
+  }
+}
+```
+
+### Worktree 스파스 경로 (worktree.sparsePaths)
+
+```json
+{
+  "worktree": {
+    "sparsePaths": ["packages/core", "packages/shared", "apps/web"]
+  }
+}
+```
+
+대규모 모노레포에서 worktree 생성 시 지정된 경로만 체크아웃하여 성능을 개선합니다. Git sparse-checkout을 내부적으로 사용합니다.
 
 ---
 

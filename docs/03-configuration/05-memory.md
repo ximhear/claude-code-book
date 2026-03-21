@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-06 -->
+<!-- last_updated: 2026-03-21 -->
 
 # 13. 메모리 시스템
 
@@ -51,6 +51,7 @@ Claude는 세션 중에 유용한 정보를 발견하면 **자동으로 메모�
 - 같은 저장소의 하위 디렉토리들은 동일한 메모리를 공유
 - **Git worktree 간에도 프로젝트 설정과 auto-memory가 공유**됩니다 (동일 저장소)
 - Git 저장소 밖에서는 작업 디렉토리를 기준으로 생성
+- `settings.json`의 `autoMemoryDirectory`로 저장 경로를 변경할 수 있습니다 ([10장: settings.json](02-settings.md) 참조)
 
 ### MEMORY.md의 역할
 

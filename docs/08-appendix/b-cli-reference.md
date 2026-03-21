@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-11 -->
+<!-- last_updated: 2026-03-21 -->
 
 # 부록 B: CLI 레퍼런스
 
@@ -26,6 +26,7 @@ claude [옵션] [초기 프롬프트]
 | `--teleport` | 웹 세션을 터미널로 이전 |
 | `--from-pr <PR>` | PR 컨텍스트로 세션 시작 |
 | `-w`, `--worktree [이름]` | 격리된 Git worktree에서 세션 시작 |
+| `-n`, `--name <이름>` | 세션 표시 이름 지정 |
 | `--no-session-persistence` | 세션 저장 안 함 |
 
 ### 모델과 추론
@@ -59,6 +60,8 @@ claude [옵션] [초기 프롬프트]
 | `--remote` | 클라우드 세션 |
 | `--status <ID>` | 세션 상태 확인 |
 | `--mcp-debug` | MCP 디버그 모드 |
+| `--channels <플러그인>` | 외부 플랫폼 채널 활성화 (Telegram, Discord) |
+| `--bare` | 훅, LSP, 플러그인 동기화, 스킬 탐색을 건너뛰고 최소 모드로 실행 |
 
 ---
 
@@ -78,6 +81,7 @@ claude config set <키> <값>           # 설정 변경
 claude auth login                       # 로그인
 claude auth login --email user@co.com   # 이메일 지정 로그인
 claude auth login --sso                 # SSO 로그인
+claude auth login --console             # 콘솔(API 과금) 인증
 claude auth status                      # 인증 상태 확인
 claude auth status --text               # 텍스트 출력 (종료 코드: 0=로그인, 1=미로그인)
 claude auth logout                      # 로그아웃
@@ -157,6 +161,7 @@ claude mcp remove <이름>                   # 서버 제거
 | `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` | 내장 Git 커밋/PR 지침 비활성화 |
 | `ENABLE_CLAUDEAI_MCP_SERVERS` | claude.ai MCP 서버 사용 (`false`로 비활성화) |
 | `CLAUDE_CODE_DISABLE_CRON` | `/loop`의 Cron 스케줄링 비활성화 |
+| `CLAUDE_PLUGIN_DATA` | 플러그인 영구 데이터 디렉토리 |
 
 ### 보안
 

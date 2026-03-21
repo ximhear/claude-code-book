@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-11 -->
+<!-- last_updated: 2026-03-21 -->
 
 # 부록 D: 용어집
 
@@ -11,10 +11,12 @@
 | **Agent Teams** | 여러 Claude 세션이 병렬로 협력하는 실험적 기능. 공유 태스크 리스트와 직접 메시징 지원 |
 | **Agentic Loop** | Claude Code의 핵심 실행 주기: 컨텍스트 수집 → 행동 → 검증 |
 | **CLAUDE.md** | 프로젝트별 영구 지침 파일. 세션 시작 시 자동 로드 |
+| **Channels** | 외부 메시징 플랫폼(Telegram, Discord)에서 실행 중인 세션으로 이벤트를 푸시하는 MCP 서버 기반 기능. `--channels` 플래그로 활성화 |
 | **Checkpoint** | 파일 수정 전 자동 생성되는 스냅샷. `/rewind`로 복원 가능. 30일 보관 |
 | **Compact** | 대화 이력을 압축하여 컨텍스트 공간 확보. `/compact` 명령어 |
 | **Context Window** | Claude가 한 번에 처리할 수 있는 토큰의 총량 (200K 또는 1M) |
-| **Effort Level** | Extended Thinking의 추론 깊이 제어. Low, Medium, High 세 단계. 모델 선택기에서 조절 |
+| **Effort Level** | Extended Thinking의 추론 깊이 제어. ○ Low, ◐ Medium, ● High 세 단계. `/effort` 또는 모델 선택기에서 조절 |
+| **Elicitation** | MCP 서버가 사용자에게 추가 정보를 요청하는 메커니즘. `Elicitation`/`ElicitationResult` 훅 이벤트로 제어 가능 |
 | **Extended Thinking** | Claude가 응답 전 내부적으로 추론하는 기능. Opus는 적응형 |
 | **Fast Mode** | 동일한 모델에서 빠른 출력을 제공하는 모드. `/fast` 토글 |
 | **Fork** | 세션을 복사하여 독립적으로 진행. `--fork-session` |

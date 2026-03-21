@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-02-28 -->
+<!-- last_updated: 2026-03-21 -->
 
 # 20. Hooks — 이벤트 기반 자동화
 
@@ -29,6 +29,7 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | **SessionEnd** | 세션 종료 시 | 정리, 로깅 |
 | **UserPromptSubmit** | 사용자 프롬프트 제출 시 | 입력 검증, 변환 |
 | **Stop** | Claude 응답 완료 시 | 후처리, 알림 |
+| **StopFailure** | API 오류로 턴 종료 시 | 에러 알림, 재시도 로직 |
 | **SubagentStart** | 서브에이전트 생성 시 | 추적, 설정 |
 | **SubagentStop** | 서브에이전트 완료 시 | 결과 처리 |
 | **TeammateIdle** | 팀 에이전트가 유휴 전환 시 | 종료 코드 2로 유휴 방지 가능 |
@@ -37,6 +38,9 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | **WorktreeCreate** | Worktree 생성 시 | 비-Git VCS 지원 (stdout으로 경로 반환) |
 | **WorktreeRemove** | Worktree 제거 시 | VCS 정리 |
 | **PreCompact** | 컨텍스트 압축 전 | 압축 전 처리 |
+| **PostCompact** | 컨텍스트 압축 완료 후 | 압축 후 로깅, 후처리 |
+| **Elicitation** | MCP 서버가 추가 정보 요청 시 | 엘리시테이션 제어, 자동 응답 |
+| **ElicitationResult** | 엘리시테이션 결과 반환 시 | 결과 감사, 후처리 |
 | **InstructionsLoaded** | CLAUDE.md / rules 파일 로드 시 | 지침 감사, 동적 규칙 주입 |
 
 ---
@@ -365,7 +369,7 @@ HTTP 훅의 응답 처리:
 
 | 주제 | 핵심 포인트 |
 |------|------------|
-| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 18가지 |
+| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 22가지 |
 | **훅 타입** | `command` (셸 명령어) 또는 `http` (HTTP POST) |
 | **설정** | settings.json의 `hooks` 배열 |
 | **매처** | 정규식으로 도구 이름 필터링 |

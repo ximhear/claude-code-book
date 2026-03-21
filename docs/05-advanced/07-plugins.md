@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-06 -->
+<!-- last_updated: 2026-03-21 -->
 
 # 25. 플러그인
 
@@ -190,6 +190,19 @@ CONFIG="${CLAUDE_PLUGIN_ROOT}/config/lint-rules.json"
 eslint --config "$CONFIG" "$FILE_PATH"
 ```
 
+### `${CLAUDE_PLUGIN_DATA}`
+
+플러그인의 **영구 상태를 저장**하는 디렉토리 경로입니다. 플러그인이 세션 간에 데이터를 유지해야 할 때 사용합니다:
+
+```bash
+# hooks/save-stats.sh 에서 플러그인 통계 저장
+STATS_FILE="${CLAUDE_PLUGIN_DATA}/usage-stats.json"
+echo "$STATS_JSON" > "$STATS_FILE"
+```
+
+- 플러그인별로 격리된 디렉토리가 제공됩니다
+- 캐시, 설정, 로그 등 영구 데이터 저장에 적합합니다
+
 ---
 
 ## 플러그인 만들기
@@ -367,6 +380,7 @@ my-marketplace/
 | **npm** | `{ "source": "npm", "package": "@company/plugin", "version": "^2.0" }` | npm 패키지 |
 | **pip** | `{ "source": "pip", "package": "claude-plugin-x" }` | pip 패키지 |
 | **Git 서브디렉토리** | `{ "source": "git-subdir", "url": "...", "subdir": "plugins/foo" }` | Git 저장소 내 특정 하위 디렉토리 |
+| **인라인 (settings)** | `{ "source": "settings" }` | settings.json에서 직접 선언 (외부 마켓플레이스 불필요) |
 
 > 상대 경로는 Git 또는 로컬 경로로 추가된 마켓플레이스에서만 동작합니다. URL로 `marketplace.json`을 직접 가리키는 경우 상대 경로가 해석되지 않습니다.
 

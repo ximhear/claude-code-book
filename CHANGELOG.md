@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.7.0] - 2026-03-21
+### Added
+- 30장: Channels 챕터 신규 추가 (Telegram/Discord 외부 플랫폼 연동, 페어링/보안 모델, 엔터프라이즈 관리)
+- 5장: `/effort` 노력 수준 변경 슬래시 커맨드 섹션 추가
+- 5장: `/branch` 세션 분기 슬래시 커맨드 섹션 추가 (`/fork` 별칭)
+- 5장: `/loop` 공식 문서 기반 보강 (일회성 리마인더, 3일 만료, 지터, 50-태스크 한도)
+- 5장: `/copy N` 인덱스 파라미터, `effort` 프론트매터 필드
+- 10장: `modelOverrides`, `autoMemoryDirectory`, `allowRead`, `worktree.sparsePaths` 설정 키
+- 13장: `autoMemoryDirectory` 설정 참조
+- 20장: `PostCompact`, `Elicitation`, `ElicitationResult`, `StopFailure` 훅 이벤트 (총 22개)
+- 25장: `${CLAUDE_PLUGIN_DATA}` 변수, `source: 'settings'` 인라인 플러그인 소스
+- CLI 레퍼런스: `--channels`, `--bare`, `--console`, `-n`/`--name` 플래그, `CLAUDE_PLUGIN_DATA`
+- 용어집: Channels, Elicitation 용어 추가
+### Changed
+- 8장: Opus 4.6 기본 최대 출력 64K 반영 (상한 128K)
+- 챕터 번호 재정렬: 30장 삽입으로 기존 30~34장 → 31~35장
+
 ## [0.6.0] - 2026-03-11
 ### Added
 - 5장: `/loop` 반복 프롬프트 실행 섹션 추가 (시간 간격, Cron 스케줄링, cancel)
