@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-21 -->
+<!-- last_updated: 2026-03-26 -->
 
 # 20. Hooks — 이벤트 기반 자동화
 
@@ -35,6 +35,9 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | **TeammateIdle** | 팀 에이전트가 유휴 전환 시 | 종료 코드 2로 유휴 방지 가능 |
 | **TaskCompleted** | 태스크 완료 표시 시 | 종료 코드 2로 완료 차단 가능 |
 | **ConfigChange** | 설정 파일 변경 시 | 감사, 보안 정책 적용 |
+| **CwdChanged** | 작업 디렉토리 변경 시 | 환경 재설정 (direnv 등) |
+| **FileChanged** | 파일 변경 시 | 환경 반응형 관리 |
+| **TaskCreated** | `TaskCreate`로 태스크 생성 시 | 태스크 추적, 알림 |
 | **WorktreeCreate** | Worktree 생성 시 | 비-Git VCS 지원 (stdout으로 경로 반환) |
 | **WorktreeRemove** | Worktree 제거 시 | VCS 정리 |
 | **PreCompact** | 컨텍스트 압축 전 | 압축 전 처리 |
@@ -369,7 +372,7 @@ HTTP 훅의 응답 처리:
 
 | 주제 | 핵심 포인트 |
 |------|------------|
-| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 22가지 |
+| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 25가지 |
 | **훅 타입** | `command` (셸 명령어) 또는 `http` (HTTP POST) |
 | **설정** | settings.json의 `hooks` 배열 |
 | **매처** | 정규식으로 도구 이름 필터링 |

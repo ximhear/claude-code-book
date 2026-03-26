@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-21 -->
+<!-- last_updated: 2026-03-26 -->
 
 # 부록 B: CLI 레퍼런스
 
@@ -162,6 +162,8 @@ claude mcp remove <이름>                   # 서버 제거
 | `ENABLE_CLAUDEAI_MCP_SERVERS` | claude.ai MCP 서버 사용 (`false`로 비활성화) |
 | `CLAUDE_CODE_DISABLE_CRON` | `/loop`의 Cron 스케줄링 비활성화 |
 | `CLAUDE_PLUGIN_DATA` | 플러그인 영구 데이터 디렉토리 |
+| `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | 서브프로세스에서 자격 증명 제거 |
+| `CLAUDE_STREAM_IDLE_TIMEOUT_MS` | 스트리밍 유휴 감시 타임아웃 (기본 90초) |
 
 ### 보안
 

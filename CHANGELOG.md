@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.1] - 2026-03-26
+### Added
+- 20장: `CwdChanged`, `FileChanged`, `TaskCreated` 훅 이벤트 추가 (총 25개)
+- 10장: `managed-settings.d/` 드롭인 디렉토리, `sandbox.failIfUnavailable`, `allowedChannelPlugins`, `disableDeepLinkRegistration` 설정
+- 10장: `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`, `CLAUDE_STREAM_IDLE_TIMEOUT_MS` 환경 변수
+- 10장: `chat:killAgents`, `chat:fastMode`, `Ctrl+X Ctrl+E` 키바인딩
+- 22장: 에이전트 `initialPrompt` 프론트매터 필드
+- CLI 레퍼런스: `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`, `CLAUDE_STREAM_IDLE_TIMEOUT_MS`
+- 용어집: Transcript 검색 기능 (`/`) 설명 보강
+
 ## [0.7.0] - 2026-03-21
 ### Added
 - 30장: Channels 챕터 신규 추가 (Telegram/Discord 외부 플랫폼 연동, 페어링/보안 모델, 엔터프라이즈 관리)

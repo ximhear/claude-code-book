@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-21 -->
+<!-- last_updated: 2026-03-26 -->
 
 # 10. settings.json 설정 가이드
 
@@ -29,6 +29,8 @@ Claude Code는 5개 범위의 설정을 지원합니다. 더 구체적인 범위
 | Windows | `C:\Program Files\ClaudeCode\managed-settings.json` |
 
 관리자 설정은 **사용자가 덮어쓸 수 없습니다**. 조직 보안 정책을 강제하는 데 사용됩니다.
+
+**드롭인 디렉토리**: `managed-settings.d/` 디렉토리에 별도의 정책 파편 파일을 배치할 수 있습니다. 여러 팀이 독립적으로 정책을 배포할 때 유용하며, 파일은 알파벳순으로 병합됩니다.
 
 ---
 
@@ -179,6 +181,8 @@ macOS에서 MITM 프록시(기업 프록시 등)로 인해 TLS 인증서 검증 
 `enableWeakerNetworkIsolation`은 Go 프로그램(gh, gcloud, terraform 등)이 커스텀 CA 인증서를 사용할 수 있게 합니다.
 
 `denyRead`로 읽기를 차단한 영역 내에서 `allowRead`로 특정 경로를 다시 허용할 수 있습니다. 자세한 내용은 아래 "샌드박스 읽기 허용" 섹션을 참조하세요.
+
+`sandbox.failIfUnavailable`을 `true`로 설정하면 샌드박스를 시작할 수 없을 때 샌드박스 없이 실행하는 대신 에러로 종료합니다.
 
 ### Git 지침 제어 (includeGitInstructions)
 
@@ -343,6 +347,8 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` | 내장 Git 지침 비활성화 | — |
 | `ENABLE_CLAUDEAI_MCP_SERVERS` | claude.ai MCP 서버 사용 (`false`로 비활성화) | true |
 | `CLAUDE_CODE_DISABLE_CRON` | `/loop`의 Cron 스케줄링 비활성화 | — |
+| `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | 서브프로세스에서 Anthropic/클라우드 자격 증명 제거 | — |
+| `CLAUDE_STREAM_IDLE_TIMEOUT_MS` | 스트리밍 유휴 감시 타임아웃 (밀리초) | 90000 |
 
 ### 훅 관련
 
@@ -451,6 +457,9 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | | `historySearch:accept` | Escape, Tab |
 | **Task** | `task:background` | Ctrl+B |
 | **Voice** | `voice:pushToTalk` | Space |
+| **Chat** | `chat:killAgents` | Ctrl+X Ctrl+K |
+| | `chat:fastMode` | — |
+| | `chat:externalEditor` | Ctrl+G 또는 Ctrl+X Ctrl+E |
 
 전체 액션 목록은 `/keybindings` 명령어로 확인할 수 있습니다.
 
@@ -473,6 +482,8 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `strictKnownMarketplaces` | 허용된 플러그인 마켓플레이스 소스만 |
 | `extraKnownMarketplaces` | 사전 등록 마켓플레이스 (맵 형식) |
 | `enabledPlugins` | 허용 플러그인 (`name@marketplace` 맵) |
+| `allowedChannelPlugins` | 허용된 채널 플러그인 목록 |
+| `disableDeepLinkRegistration` | `claude-cli://` 프로토콜 핸들러 등록 방지 |
 
 ### 예시: 엔터프라이즈 잠금 설정
 

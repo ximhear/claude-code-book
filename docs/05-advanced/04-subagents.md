@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-11 -->
+<!-- last_updated: 2026-03-26 -->
 
 # 22. 서브에이전트와 병렬 처리
 
@@ -105,6 +105,7 @@ maxTurns: 10
 | `disallowedTools` | | 차단 도구 목록 |
 | `permissionMode` | | 권한 모드 (ask, allow, deny) |
 | `maxTurns` | | 최대 대화 턴 수 |
+| `initialPrompt` | | 에이전트 시작 시 자동 제출할 첫 번째 프롬프트 |
 
 ---
 
