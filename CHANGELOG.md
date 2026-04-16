@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.8.0] - 2026-04-16
+### Added
+- 5장: `/team-onboarding`, `/recap`, `/release-notes`, `/powerup` 슬래시 커맨드 추가
+- 5장: `/undo` (`/rewind` 별칭), `/proactive` (`/loop` 별칭) 추가
+- 5장: `effort` 프론트매터 필드 추가
+- 20장: `PermissionDenied` 훅 이벤트 추가 (총 26개), 조건부 `if` 필드, PreCompact 차단 지원
+- 10장: `ENABLE_PROMPT_CACHING_1H`, `CLAUDE_CODE_USE_MANTLE`, `CLAUDE_CODE_PERFORCE_MODE` 등 환경 변수 7개
+- 10장: `forceRemoteSettingsRefresh`, `disableSkillShellExecution` 관리자 설정
+- 25장: 플러그인 `bin/` 실행 파일 디렉토리
+- CLI 레퍼런스: 환경 변수 7개 추가
+- 용어집: Mantle, Monitor 용어 추가
+### Changed
+- 8장: 기본 노력 수준 medium → **high** 변경 반영 (API/Bedrock/Vertex/Foundry/Team/Enterprise)
+
 ## [0.7.1] - 2026-03-26
 ### Added
 - 20장: `CwdChanged`, `FileChanged`, `TaskCreated` 훅 이벤트 추가 (총 25개)

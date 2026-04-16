@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-26 -->
+<!-- last_updated: 2026-04-16 -->
 
 # 20. Hooks — 이벤트 기반 자동화
 
@@ -40,10 +40,11 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | **TaskCreated** | `TaskCreate`로 태스크 생성 시 | 태스크 추적, 알림 |
 | **WorktreeCreate** | Worktree 생성 시 | 비-Git VCS 지원 (stdout으로 경로 반환) |
 | **WorktreeRemove** | Worktree 제거 시 | VCS 정리 |
-| **PreCompact** | 컨텍스트 압축 전 | 압축 전 처리 |
+| **PreCompact** | 컨텍스트 압축 전 | 압축 전 처리, 종료 코드 2 또는 `{"decision":"block"}`으로 차단 가능 |
 | **PostCompact** | 컨텍스트 압축 완료 후 | 압축 후 로깅, 후처리 |
 | **Elicitation** | MCP 서버가 추가 정보 요청 시 | 엘리시테이션 제어, 자동 응답 |
 | **ElicitationResult** | 엘리시테이션 결과 반환 시 | 결과 감사, 후처리 |
+| **PermissionDenied** | 자동 모드에서 권한 거부 시 | `{retry: true}` 반환으로 재시도 |
 | **InstructionsLoaded** | CLAUDE.md / rules 파일 로드 시 | 지침 감사, 동적 규칙 주입 |
 
 ---
@@ -77,6 +78,7 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | `headers` | | HTTP 훅 전용. 추가 헤더 (`$VAR_NAME` 환경변수 보간 지원) |
 | `allowedEnvVars` | | HTTP 훅 전용. 헤더에서 보간 허용할 환경변수 목록 |
 | `matcher` | | 도구 이름 필터 (정규식) |
+| `if` | | 조건부 실행 필터 (권한 규칙 문법, 예: `"Bash(git *)"`) |
 | `timeout` | | 실행 시간 제한 (초) |
 
 > △ = `type`에 따라 필수. `command` 타입이면 `command`, `http` 타입이면 `url` 필수.
@@ -372,7 +374,7 @@ HTTP 훅의 응답 처리:
 
 | 주제 | 핵심 포인트 |
 |------|------------|
-| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 25가지 |
+| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 26가지 |
 | **훅 타입** | `command` (셸 명령어) 또는 `http` (HTTP POST) |
 | **설정** | settings.json의 `hooks` 배열 |
 | **매처** | 정규식으로 도구 이름 필터링 |

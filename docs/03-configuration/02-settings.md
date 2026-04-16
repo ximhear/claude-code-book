@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-26 -->
+<!-- last_updated: 2026-04-16 -->
 
 # 10. settings.json 설정 가이드
 
@@ -349,6 +349,13 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `CLAUDE_CODE_DISABLE_CRON` | `/loop`의 Cron 스케줄링 비활성화 | — |
 | `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | 서브프로세스에서 Anthropic/클라우드 자격 증명 제거 | — |
 | `CLAUDE_STREAM_IDLE_TIMEOUT_MS` | 스트리밍 유휴 감시 타임아웃 (밀리초) | 90000 |
+| `ENABLE_PROMPT_CACHING_1H` | 1시간 프롬프트 캐시 TTL 활성화 (API/Bedrock/Vertex/Foundry) | — |
+| `FORCE_PROMPT_CACHING_5M` | 5분 TTL 강제 적용 | — |
+| `CLAUDE_CODE_USE_MANTLE` | Amazon Bedrock Mantle 활성화 | — |
+| `CLAUDE_CODE_PERFORCE_MODE` | 읽기 전용 파일에 `p4 edit` 힌트 표시 | — |
+| `CLAUDE_CODE_NO_FLICKER` | 플리커 없는 alt-screen 렌더링 | — |
+| `MCP_CONNECTION_NONBLOCKING` | `-p` 모드에서 MCP 연결 대기 건너뜀 (5초 상한) | — |
+| `CLAUDE_CODE_SCRIPT_CAPS` | 세션당 스크립트 호출 횟수 제한 | — |
 
 ### 훅 관련
 
@@ -484,6 +491,8 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `enabledPlugins` | 허용 플러그인 (`name@marketplace` 맵) |
 | `allowedChannelPlugins` | 허용된 채널 플러그인 목록 |
 | `disableDeepLinkRegistration` | `claude-cli://` 프로토콜 핸들러 등록 방지 |
+| `forceRemoteSettingsRefresh` | 시작 시 원격 설정 강제 갱신 (실패 시 종료) |
+| `disableSkillShellExecution` | 스킬/커맨드의 인라인 셸 실행 비활성화 |
 
 ### 예시: 엔터프라이즈 잠금 설정
 

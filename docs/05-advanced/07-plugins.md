@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-21 -->
+<!-- last_updated: 2026-04-16 -->
 
 # 25. 플러그인
 
@@ -213,7 +213,10 @@ echo "$STATS_JSON" > "$STATS_FILE"
 mkdir -p my-plugin/.claude-plugin
 mkdir -p my-plugin/skills/lint
 mkdir -p my-plugin/hooks
+mkdir -p my-plugin/bin          # 선택: 실행 가능한 바이너리/스크립트
 ```
+
+> **`bin/` 디렉토리**: 플러그인에 실행 파일을 포함할 수 있습니다. `bin/` 아래의 파일은 Bash 도구에서 bare 명령어로 호출 가능합니다.
 
 ### 2단계: .claude-plugin/plugin.json 작성
 

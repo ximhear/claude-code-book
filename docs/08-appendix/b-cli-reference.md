@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-03-26 -->
+<!-- last_updated: 2026-04-16 -->
 
 # 부록 B: CLI 레퍼런스
 
@@ -164,6 +164,13 @@ claude mcp remove <이름>                   # 서버 제거
 | `CLAUDE_PLUGIN_DATA` | 플러그인 영구 데이터 디렉토리 |
 | `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` | 서브프로세스에서 자격 증명 제거 |
 | `CLAUDE_STREAM_IDLE_TIMEOUT_MS` | 스트리밍 유휴 감시 타임아웃 (기본 90초) |
+| `ENABLE_PROMPT_CACHING_1H` | 1시간 프롬프트 캐시 TTL |
+| `FORCE_PROMPT_CACHING_5M` | 5분 캐시 TTL 강제 |
+| `CLAUDE_CODE_USE_MANTLE` | Bedrock Mantle 활성화 |
+| `CLAUDE_CODE_PERFORCE_MODE` | Perforce 읽기 전용 파일 모드 |
+| `CLAUDE_CODE_NO_FLICKER` | 플리커 없는 렌더링 |
+| `MCP_CONNECTION_NONBLOCKING` | `-p` 모드 MCP 연결 비차단 |
+| `CLAUDE_CODE_SCRIPT_CAPS` | 세션당 스크립트 호출 제한 |
 
 ### 보안
 
