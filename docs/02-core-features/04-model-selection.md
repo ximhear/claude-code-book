@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-04-16 -->
+<!-- last_updated: 2026-05-07 -->
 
 # 8. 모델 선택과 전환
 
@@ -8,22 +8,42 @@
 
 ## 사용 가능한 모델
 
-Claude Code는 세 가지 모델을 지원합니다.
+Claude Code는 다음 모델들을 지원합니다.
 
-### Claude Opus 4.6 — 최강의 추론
+### Claude Opus 4.7 — 최신 최강 추론 모델
+
+| 항목 | 내용 |
+|------|------|
+| **모델 ID** | `claude-opus-4-7` |
+| **별칭** | `opus` (현재 기본) |
+| **컨텍스트 윈도우** | 200K (기본) / 1M (베타, `claude-opus-4-7[1m]`) |
+| **최대 출력** | 64K 토큰 (기본) / 128K 토큰 (상한) |
+| **적응형 추론** | 지원 — ○ Low / ◐ Medium / ● High / ⬤ xHigh |
+| **적합한 용도** | 코딩(공식 권장), 아키텍처 결정, 복잡한 디버깅, 대규모 리팩토링 |
+
+> **2026-04 출시**: Opus 4.7은 Max/Team Premium 사용자에게 기본 모델로 제공됩니다. **xhigh** 노력 수준은 코딩 작업용으로 새로 추가된 단계로, Anthropic이 권장하는 기본 추론 깊이입니다.
+
+### Claude Opus 4.6 — 이전 세대 추론 모델
 
 | 항목 | 내용 |
 |------|------|
 | **모델 ID** | `claude-opus-4-6` |
-| **별칭** | `opus` |
-| **컨텍스트 윈도우** | 200K (기본) / 1M (베타) |
-| **최대 출력** | 64K 토큰 (기본) / 128K 토큰 (상한) |
-| **적응형 추론** | 지원 — ○ Low / ◐ Medium / ● High |
+| **별칭** | `opus`(특정 시점), `claude-opus-4-6[1m]` (1M 컨텍스트) |
+| **컨텍스트 윈도우** | 200K / 1M (베타) |
+| **최대 출력** | 64K (기본) / 128K (상한) |
 | **가격** | $5 / 1M 입력, $25 / 1M 출력 |
-| **지식 기준일** | 2025년 5월 (신뢰), 2025년 8월 (훈련) |
-| **적합한 용도** | 아키텍처 결정, 복잡한 디버깅, 대규모 리팩토링, 멀티스텝 계획 |
 
-> **기본 노력 수준**: API 키, Bedrock/Vertex/Foundry, Team, Enterprise 사용자는 기본 노력 수준이 **high**입니다. "ultrathink"를 프롬프트에 포함하면 다음 턴에 **high** effort가 명시적으로 활성화됩니다. 현재 노력 수준은 로고/스피너 옆에 시각적으로 표시됩니다 (○ low, ◐ medium, ● high). `/effort` 커맨드로 변경할 수 있습니다.
+> **기본 노력 수준**: API 키, Bedrock/Vertex/Foundry, Team, Enterprise 사용자는 기본 노력 수준이 **high**입니다. Opus 4.7에서는 코딩 작업에 **xhigh**가 권장됩니다. "ultrathink"를 프롬프트에 포함하면 다음 턴에 **high** effort가 명시적으로 활성화됩니다. 현재 노력 수준은 로고/스피너 옆에 시각적으로 표시됩니다 (○ low, ◐ medium, ● high, ⬤ xhigh). `/effort` 커맨드 또는 인터랙티브 슬라이더로 변경할 수 있습니다.
+
+### Auto Mode — 모델 자동 선택
+
+| 항목 | 내용 |
+|------|------|
+| **별칭** | `auto` |
+| **대상** | Max 구독자 (점진적 출시) |
+| **동작** | 작업 난이도와 사용량 한도에 따라 Opus/Sonnet/Haiku를 자동 선택 |
+
+`/model auto`로 활성화하면 Claude Code가 작업 컨텍스트와 남은 사용량 한도를 함께 고려해 모델을 동적으로 전환합니다. 권한 모드와 별개로, 최대 효율을 원할 때 사용합니다.
 
 ### Claude Sonnet 4.6 — 속도와 품질의 균형
 
@@ -58,12 +78,13 @@ Sonnet 4.6은 Opus 수준의 코딩 성능에 더 나은 도구 사용 안정성
 
 | 별칭 | 대상 | 설명 |
 |------|------|------|
-| `default` | 계정 유형에 따라 다름 | Max/Teams: Opus, Pro: Opus |
-| `opus` | Claude Opus 4.6 | 최신 Opus |
+| `default` | 계정 유형에 따라 다름 | Max/Teams: Opus 4.7, Pro: Opus 4.6/4.7 |
+| `opus` | Claude Opus (최신) | 현재 Opus 4.7 |
 | `sonnet` | Claude Sonnet 4.6 | 최신 Sonnet |
 | `haiku` | Claude Haiku 4.5 | 최신 Haiku |
+| `auto` | Opus / Sonnet / Haiku 자동 선택 | Max 구독자, 작업 난이도와 한도 기반 |
 | `opusplan` | Opus + Sonnet | 하이브리드 모드 (아래 설명) |
-| `opus[1m]` | Opus 4.6 (1M 컨텍스트) | 100만 토큰 컨텍스트 |
+| `opus[1m]` | Opus (1M 컨텍스트) | 100만 토큰 컨텍스트 |
 | `sonnet[1m]` | Sonnet 4.6 (1M 컨텍스트) | 100만 토큰 컨텍스트 |
 
 > **특정 버전 고정**: 버전을 고정하려면 전체 모델 ID를 사용하세요 (예: `claude-sonnet-4-6`). 별칭은 업데이트 시 자동으로 최신 버전을 가리킵니다. 모델 ID는 새 버전 출시 시 변경될 수 있으므로, 최신 ID는 [Anthropic 공식 문서](https://docs.anthropic.com/en/docs/about-claude/models)에서 확인하세요.
@@ -87,8 +108,10 @@ Sonnet 4.6은 Opus 수준의 코딩 성능에 더 나은 도구 사용 안정성
 ```
 
 - 현재 응답 생성 중에도 전환할 수 있습니다
-- Opus 4.6 선택 시 **좌/우 화살표**로 노력 수준을 조절합니다
+- Opus 4.6/4.7 선택 시 **좌/우 화살표**로 노력 수준을 조절합니다 (low/medium/high/xhigh, xhigh는 Opus 4.7 전용)
 - 인자 없이 `/model`을 입력하면 선택 화면이 나타납니다
+- `/model auto`로 자동 선택 모드로 전환할 수 있습니다 (Max 구독자 점진적 출시)
+- 게이트웨이(`ANTHROPIC_BASE_URL`)에서 제공하는 모델은 자동으로 표시됩니다 (`CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1`로 옵트인)
 
 ### 2. `--model` CLI 플래그 (두 번째)
 
@@ -371,8 +394,9 @@ Claude Code는 레이트 리밋 상황에서 자동으로 모델을 전환합니
 
 | 주제 | 핵심 포인트 |
 |------|------------|
-| **모델** | Opus 4.6 (최강), Sonnet 4.6 (균형), Haiku 4.5 (빠름) |
-| **별칭** | `opus`, `sonnet`, `haiku`, `opusplan`, `sonnet[1m]`, `opus[1m]` |
+| **모델** | Opus 4.7 (최신/코딩 권장), Opus 4.6 (이전 세대), Sonnet 4.6 (균형), Haiku 4.5 (빠름) |
+| **노력 수준** | ○ low / ◐ medium / ● high / ⬤ xhigh (Opus 4.7) |
+| **별칭** | `opus`, `sonnet`, `haiku`, `auto`, `opusplan`, `sonnet[1m]`, `opus[1m]` |
 | **전환 방법** | `/model`, `--model`, `ANTHROPIC_MODEL`, settings.json, Option+P |
 | **우선순위** | `/model` > `--model` > 환경 변수 > settings 파일 |
 | **Opusplan** | 계획은 Opus, 실행은 Sonnet — 비용 효율적 |

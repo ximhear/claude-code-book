@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-04-16 -->
+<!-- last_updated: 2026-05-07 -->
 
 # 부록 B: CLI 레퍼런스
 
@@ -62,6 +62,11 @@ claude [옵션] [초기 프롬프트]
 | `--mcp-debug` | MCP 디버그 모드 |
 | `--channels <플러그인>` | 외부 플랫폼 채널 활성화 (Telegram, Discord) |
 | `--bare` | 훅, LSP, 플러그인 동기화, 스킬 탐색을 건너뛰고 최소 모드로 실행 |
+| `--tui` | 시작 시 풀스크린(TUI) 모드 |
+| `--plugin-url <url>` | URL에서 플러그인 아카이브를 받아 현재 세션에 로드 |
+| `--plugin-dir <경로\|.zip>` | 로컬 디렉토리 또는 zip 아카이브에서 플러그인 로드 |
+| `--exclude-dynamic-system-prompt-sections <섹션>` | 시스템 프롬프트 동적 섹션 제외 |
+| `--dangerously-skip-permissions` | 권한 프롬프트 우회 (`.claude/`, `.git/`, `.vscode/` 포함) |
 
 ---
 
@@ -95,6 +100,31 @@ claude mcp add <이름> -e KEY=VAL <명령어>  # 환경 변수와 함께
 claude mcp list                            # 서버 목록
 claude mcp get <이름>                      # 서버 상세 정보
 claude mcp remove <이름>                   # 서버 제거
+```
+
+### `claude project`
+
+```bash
+claude project purge [path]                # 프로젝트의 모든 Claude Code 상태 삭제
+claude project purge --dry-run             # 삭제 대상 미리보기
+claude project purge -y                    # 확인 없이 삭제
+claude project purge -i                    # 인터랙티브 선택
+claude project purge --all                 # 모든 프로젝트 상태 삭제
+```
+
+### `claude plugin`
+
+```bash
+claude plugin validate <경로>              # 매니페스트 유효성 검증
+claude plugin prune                        # 고아 의존성 제거
+claude plugin tag                          # 릴리스용 git 태그 생성
+claude plugin marketplace add <소스>       # 마켓플레이스 등록
+```
+
+### `claude ultrareview`
+
+```bash
+claude ultrareview [target]                # 비대화형 클라우드 코드 리뷰 (CI/스크립트용)
 ```
 
 ### `/plugin`
@@ -132,6 +162,7 @@ claude mcp remove <이름>                   # 서버 제거
 | 변수 | 용도 |
 |------|------|
 | `CLAUDE_CODE_USE_BEDROCK` | Amazon Bedrock |
+| `ANTHROPIC_BEDROCK_SERVICE_TIER` | Bedrock 서비스 티어 (`default`, `flex`, `priority`) |
 | `CLAUDE_CODE_USE_VERTEX` | Google Vertex AI |
 | `ANTHROPIC_VERTEX_PROJECT_ID` | Vertex 프로젝트 ID |
 | `CLAUDE_CODE_USE_FOUNDRY` | Microsoft Foundry |
@@ -171,6 +202,19 @@ claude mcp remove <이름>                   # 서버 제거
 | `CLAUDE_CODE_NO_FLICKER` | 플리커 없는 렌더링 |
 | `MCP_CONNECTION_NONBLOCKING` | `-p` 모드 MCP 연결 비차단 |
 | `CLAUDE_CODE_SCRIPT_CAPS` | 세션당 스크립트 호출 제한 |
+| `CLAUDE_CODE_HIDE_CWD` | 시작 로고에서 CWD 숨김 |
+| `DISABLE_UPDATES` | 모든 업데이트 경로 차단 |
+| `AI_AGENT` | 서브프로세스 에이전트 출처 식별 |
+| `CLAUDE_CODE_FORK_SUBAGENT` | 서브에이전트 fork 활성화 (외부 빌드/SDK) |
+| `CLAUDE_CODE_USE_POWERSHELL_TOOL` | PowerShell 도구 단계적 활성화 (Windows) |
+| `CLAUDE_CODE_CERT_STORE` | 인증서 저장소 (`os`, `bundled`) |
+| `CLAUDE_CODE_FORCE_SYNC_OUTPUT` | 동기화된 터미널 출력 강제 |
+| `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` | Homebrew/WinGet 자동 업그레이드 |
+| `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` | 게이트웨이 모델 자동 디스커버리 |
+| `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN` | 풀스크린 alt-screen 옵트아웃 |
+| `CLAUDE_CODE_SESSION_ID` | Bash 서브프로세스에 세션 ID 노출 |
+| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | 실험적 베타 기능 비활성화 |
+| `OTEL_LOG_RAW_API_BODIES` | 원본 API 본문 OTel 로깅 (디버그) |
 
 ### 보안
 

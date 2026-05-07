@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-04-16 -->
+<!-- last_updated: 2026-05-07 -->
 
 # 5. 슬래시 커맨드 완전 가이드
 
@@ -175,15 +175,20 @@ Vim 스타일 키 바인딩을 활성화합니다.
 - 키 바인딩 호환성 구성
 - Option/Alt+T (Extended Thinking 토글) 활성화에 필요
 
-### `/theme` — 테마 변경
+### `/theme` — 테마 변경 / 커스텀 테마
 
-색상 테마를 변경합니다.
+색상 테마를 선택, 생성, 편집합니다.
 
 ```
 > /theme
+> /theme create my-pastel
 ```
 
 - 인터랙티브 테마 선택기가 나타납니다
+- **"Auto (match terminal)"** 옵션을 선택하면 터미널의 light/dark 모드에 자동 맞춤
+- **커스텀 테마**: `~/.claude/themes/<name>.json`에 색상 팔레트를 정의하면 선택기에 노출됩니다
+- 플러그인이 `themes/` 디렉토리로 테마를 배포할 수 있습니다 (플러그인 매니페스트 `experimental` 블록)
+- Remote Control과 연동되어 터미널/`claude.ai` 양쪽 색상이 동기화됩니다 (`/color` 사용)
 
 ### `/color` — 색상 변경
 
@@ -206,16 +211,43 @@ Vim 스타일 키 바인딩을 활성화합니다.
 
 ```
 > /effort
+> /effort xhigh
 > /effort high
 > /effort medium
 > /effort low
+> /effort auto
 ```
 
-- 인자 없이 사용하면 현재 노력 수준을 표시합니다
-- `low`, `medium`, `high` 중 하나를 지정하여 즉시 변경합니다
-- 시각적 표시: ○ low, ◐ medium, ● high
+- 인자 없이 사용하면 **인터랙티브 슬라이더**가 표시됩니다 (좌/우 화살표로 조절)
+- `low`, `medium`, `high`, `xhigh`, `auto` 중 하나를 지정하여 즉시 변경합니다
+- 시각적 표시: ○ low, ◐ medium, ● high, ⬤ xhigh
+- **xhigh**는 Opus 4.7 전용으로 코딩 작업에 권장되는 수준입니다
+- `auto`로 두면 작업에 따라 효율적인 수준이 자동 선택됩니다
 - 모델 선택기의 좌/우 화살표와 동일한 효과입니다
 - Claude가 응답 중에도 변경할 수 있습니다
+
+### `/tui` — 풀스크린 TUI 토글
+
+전체 화면(fullscreen) 인터페이스를 켜거나 끕니다.
+
+```
+> /tui
+```
+
+- `tui` 설정 키 또는 `--tui` 플래그로 시작 시점부터 활성화할 수 있습니다
+- `autoScrollEnabled` 설정으로 자동 스크롤 동작을 제어합니다
+- 풀스크린에서는 위쪽 출력으로 스크롤한 채 입력해도 화면이 점프하지 않습니다
+
+### `/focus` — 포커스 모드
+
+집중 모드에서 응답 영역만 표시합니다.
+
+```
+> /focus
+```
+
+- 이전에는 옵션이었던 동작이 별도 명령어로 분리되었습니다
+- 포커스 모드 중에도 세션 리캡, 상태 표시줄이 보이도록 개선되었습니다
 
 ### `/statusline` — 상태 표시줄 설정
 
@@ -301,42 +333,35 @@ Plan 모드로 전환합니다.
 > /help
 ```
 
-### `/cost` — 비용 확인
+### `/usage` — 사용량 + 비용 통합 뷰 (`/cost`, `/stats` 별칭)
 
-현재 세션의 토큰 사용량과 비용을 표시합니다.
-
-```
-> /cost
-```
-
-출력 예시:
-```
-Total cost:            $0.55
-Total duration (API):  6m 19.7s
-Total duration (wall): 6h 33m 10.2s
-Total code changes:    42 lines added, 12 lines removed
-```
-
-- API 사용자에게 특히 유용합니다
-- 구독자는 `/usage`로 구독 사용량을 확인하세요
-
-### `/usage` — 구독 사용량
-
-구독 플랜의 사용량 한도와 레이트 리밋 상태를 표시합니다.
+세션 비용, 구독 사용량 한도(5시간/주), 일별 통계, 모델별 사용 빈도, 사용량 드라이버를 하나의 화면에 표시합니다.
 
 ```
 > /usage
+> /cost     # 별칭
+> /stats    # 별칭
 ```
 
-- Pro/Max/Teams/Enterprise 구독자 전용입니다
+출력 항목:
+- **세션 비용**: API 비용, 입출력 토큰, 코드 변경량
+- **구독 사용량**: 5시간/주 단위 한도와 잔여량 (Pro/Max/Team/Enterprise)
+- **사용 통계**: 일별 사용량, 세션 히스토리, 연속 사용일, 모델별 사용 빈도
+- **사용량 드라이버**: 어떤 작업이 한도 소비를 주도했는지 (Claude 4.7 / Week 16부터)
 
-### `/stats` — 사용 통계
+> **변경 사항**: 2.1.118부터 `/cost`와 `/stats`가 `/usage`로 통합되었습니다. 두 별칭은 그대로 사용 가능합니다.
 
-일별 사용량, 세션 히스토리, 연속 사용일, 모델별 사용 빈도 등을 시각화합니다.
+### `/less-permission-prompts` — 권한 프롬프트 자동화 가이드
+
+세션의 트랜스크립트를 분석해, 자주 묻는 권한 프롬프트를 자동 승인 규칙(allowlist)으로 등록할지 추천합니다.
 
 ```
-> /stats
+> /less-permission-prompts
 ```
+
+- 같은 도구 호출이 반복되는 패턴을 식별
+- 안전한 패턴은 `permissions.allow`에 추가할 수 있도록 제안
+- "프롬프트 피로(prompt fatigue)"를 줄이고 싶을 때 유용
 
 ### `/status` — 세션 상태
 
@@ -567,6 +592,32 @@ Anthropic이 유지보수하며 매 릴리스에 업데이트되는 **번들 커
 - 각 에이전트는 **격리된 Git worktree**에서 작업하므로 서로 간섭하지 않습니다
 - 대규모 마이그레이션, 일괄 리팩토링, API 변경 등에 적합합니다
 
+### `/ultrareview` — 클라우드 멀티에이전트 코드 리뷰
+
+현재 브랜치(또는 지정한 PR)를 Anthropic 클라우드의 다중 에이전트 함대가 병렬로 리뷰합니다.
+
+```
+> /ultrareview
+> /ultrareview 1234            # GitHub PR 번호
+> /ultrareview --target main   # 비교 대상 브랜치
+```
+
+- **공개 연구 프리뷰** (Week 17, 2026-04 출시), 사용자 트리거에 따라 별도 과금
+- 로컬 브랜치를 번들링하여 클라우드에서 실행 (Git 저장소 필요)
+- 비대화형으로 호출하려면 `claude ultrareview [target]` CLI를 사용
+- 동일한 영역에 여러 검사를 **병렬 실행**해 결과를 합성
+
+### `/ultraplan` — 클라우드 자동 환경 설계
+
+복잡한 기능 또는 마이그레이션을 위한 단계별 계획과 함께 클라우드 워크스페이스를 자동 구성합니다.
+
+```
+> /ultraplan 결제 플로우 OAuth로 마이그레이션
+```
+
+- 분석 → 계획 수립 → 격리된 클라우드 환경에서 검증 단계까지 자동화
+- 결과를 받아 "Refine with Ultraplan"으로 정제할 수 있습니다
+
 ### `/team-onboarding` — 팀 온보딩 가이드
 
 로컬 Claude Code 사용 이력을 기반으로 팀원 온보딩 가이드를 생성합니다.
@@ -645,27 +696,28 @@ Claude 계정으로 인증합니다.
 | | `/branch` | — | 세션 분기 (`/fork` 별칭) |
 | | `/teleport` | — | 원격 세션 가져오기 |
 | **설정** | `/config` | — | 설정 화면 |
-| | `/model` | `[모델명]` | 모델 전환 |
+| | `/model` | `[모델명\|auto]` | 모델 전환 |
 | | `/permissions` | — | 권한 관리 |
-| | `/vim` | — | Vim 모드 토글 |
+| | `/vim` | — | Vim 모드 토글 (visual `v`/`V` 지원) |
 | | `/terminal-setup` | — | 터미널 최적화 |
-| | `/theme` | — | 테마 변경 |
+| | `/theme` | `[create <name>]` | 테마 선택/생성 (커스텀 테마 지원) |
 | | `/color` | `[reset\|default\|gray\|none]` | 색상 변경/리셋 |
-| | `/effort` | `[low\|medium\|high]` | 노력 수준 변경 |
+| | `/effort` | `[low\|medium\|high\|xhigh\|auto]` | 노력 수준 변경 (슬라이더 UI) |
 | | `/statusline` | — | 상태 표시줄 설정 |
+| | `/tui` | — | 풀스크린 TUI 토글 |
+| | `/focus` | — | 포커스 모드 |
 | **작업** | `/init` | — | CLAUDE.md 생성 |
 | | `/review` | — | PR 리뷰 |
 | | `/pr-comments` | — | PR 코멘트 가져오기 |
 | | `/add-dir` | `<경로>` | 작업 디렉토리 추가 |
 | | `/plan` | `[설명]` | Plan 모드 진입 |
 | **정보** | `/help` | — | 도움말 |
-| | `/cost` | — | 비용 확인 |
-| | `/usage` | — | 구독 사용량 |
-| | `/stats` | — | 사용 통계 |
+| | `/usage` | — | 비용+사용량+통계 통합 (`/cost`, `/stats` 별칭) |
 | | `/status` | — | 세션 상태 |
 | | `/doctor` | `[--performance]` | 환경 진단 |
 | | `/context` | — | 컨텍스트 시각화 |
 | | `/debug` | `[설명]` | 디버그 로그 |
+| | `/less-permission-prompts` | — | 권한 프롬프트 자동화 가이드 |
 | **유틸리티** | `/export` | `[파일명]` | 대화 내보내기 |
 | | `/copy` | `[N]` | 응답 복사 (코드 블록 피커) |
 | | `/tasks` | — | 백그라운드 태스크 |
@@ -676,6 +728,8 @@ Claude 계정으로 인증합니다.
 | **음성** | `/voice` | — | Voice Mode 토글 |
 | **번들** | `/simplify` | `[포커스]` | 코드 품질 리뷰 + 자동 수정 |
 | | `/batch` | `<설명>` | 대규모 병렬 변경 |
+| | `/ultrareview` | `[PR번호\|--target br]` | 클라우드 멀티에이전트 코드 리뷰 |
+| | `/ultraplan` | `<설명>` | 클라우드 자동 계획+환경 구성 |
 | | `/team-onboarding` | — | 팀 온보딩 가이드 생성 |
 | | `/recap` | — | 세션 컨텍스트 요약 |
 | | `/release-notes` | — | 릴리스 노트 표시 |

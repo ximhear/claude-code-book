@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.9.0] - 2026-05-07
+### Added
+- 8장: **Claude Opus 4.7** 모델 추가 (Max/Team Premium 기본), **xhigh** 노력 수준
+- 8장: **Auto Mode** (`/model auto`) 추가 — 작업/한도 기반 모델 자동 선택 (Max 구독자)
+- 5장: `/ultrareview` (클라우드 멀티에이전트 코드 리뷰) 슬래시 커맨드 추가
+- 5장: `/ultraplan` (클라우드 자동 계획+환경 구성) 슬래시 커맨드 추가
+- 5장: `/tui` (풀스크린 토글), `/focus` (포커스 모드) 슬래시 커맨드 추가
+- 5장: `/less-permission-prompts` (권한 프롬프트 자동화 가이드) 슬래시 커맨드 추가
+- 5장: `/usage`로 `/cost`+`/stats` 통합, 사용량 드라이버 표시
+- 5장: `/effort` 인터랙티브 슬라이더, `xhigh`/`auto` 옵션
+- 5장: `/theme` 커스텀 테마 (`~/.claude/themes/`, `themes/` 플러그인 디렉토리)
+- 20장: 훅 `type: "mcp_tool"` (MCP 도구 직접 호출) 추가
+- 20장: PreToolUse `"defer"` 결정, PostToolUse `hookSpecificOutput.updatedToolOutput`
+- 20장: PostToolUse stdin `duration_ms` 필드 (도구 실행 시간 측정)
+- 10장: `tui`, `autoScrollEnabled`, `prUrlTemplate`, `skillOverrides` 설정 추가
+- 10장: `sandbox.network.deniedDomains`, MCP `alwaysLoad`, `statusLine.refreshInterval`
+- 10장: 환경 변수 14개 추가 (`ANTHROPIC_BEDROCK_SERVICE_TIER`, `CLAUDE_CODE_HIDE_CWD`, `DISABLE_UPDATES`, `AI_AGENT`, `CLAUDE_CODE_FORK_SUBAGENT`, `CLAUDE_CODE_USE_POWERSHELL_TOOL`, `CLAUDE_CODE_CERT_STORE`, `CLAUDE_CODE_FORCE_SYNC_OUTPUT`, `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE`, `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`, `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN`, `CLAUDE_CODE_SESSION_ID`, `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`, `OTEL_LOG_RAW_API_BODIES`)
+- 10장: 관리자 설정 4개 추가 (`allowManagedDomainsOnly`, `allowManagedReadPathsOnly`, `blockedMarketplaces`, `wslInheritsWindowsSettings`)
+- 25장: 플러그인 `themes/`, `monitors/` 디렉토리 (`experimental` 블록)
+- 25장: `claude plugin prune`, `claude plugin tag` CLI 추가
+- 25장: `--plugin-url`, `--plugin-dir <.zip>` 임시 로딩 옵션
+- CLI 레퍼런스: `claude project purge`, `claude ultrareview`, `--tui`, `--exclude-dynamic-system-prompt-sections`, `--dangerously-skip-permissions` 추가
+- 용어집: Auto Mode, Native Binary, Opus 4.7, TUI, Ultraplan, Ultrareview 추가
+### Changed
+- 8장: 기본 모델 Opus 4.6 → **Opus 4.7** 반영, 노력 수준에 xhigh 추가
+- 5장: `/cost`, `/stats` → `/usage` 통합 안내
+
 ## [0.8.0] - 2026-04-16
 ### Added
 - 5장: `/team-onboarding`, `/recap`, `/release-notes`, `/powerup` 슬래시 커맨드 추가

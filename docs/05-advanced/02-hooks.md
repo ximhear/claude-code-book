@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-04-16 -->
+<!-- last_updated: 2026-05-07 -->
 
 # 20. Hooks — 이벤트 기반 자동화
 
@@ -72,16 +72,17 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | 필드 | 필수 | 설명 |
 |------|:----:|------|
 | `event` | O | 이벤트 유형 |
-| `type` | O | `"command"` (셸 명령어) 또는 `"http"` (HTTP POST) |
+| `type` | O | `"command"` (셸 명령어), `"http"` (HTTP POST) 또는 `"mcp_tool"` (MCP 도구 직접 호출) |
 | `command` | △ | `type: "command"`일 때 실행할 명령어 또는 스크립트 경로 |
 | `url` | △ | `type: "http"`일 때 POST 요청 대상 URL |
+| `tool` | △ | `type: "mcp_tool"`일 때 호출할 MCP 도구 이름 (예: `mcp__github__create_issue`) |
 | `headers` | | HTTP 훅 전용. 추가 헤더 (`$VAR_NAME` 환경변수 보간 지원) |
 | `allowedEnvVars` | | HTTP 훅 전용. 헤더에서 보간 허용할 환경변수 목록 |
 | `matcher` | | 도구 이름 필터 (정규식) |
 | `if` | | 조건부 실행 필터 (권한 규칙 문법, 예: `"Bash(git *)"`) |
 | `timeout` | | 실행 시간 제한 (초) |
 
-> △ = `type`에 따라 필수. `command` 타입이면 `command`, `http` 타입이면 `url` 필수.
+> △ = `type`에 따라 필수. `command` 타입이면 `command`, `http` 타입이면 `url`, `mcp_tool` 타입이면 `tool` 필수.
 
 ### 매처 패턴
 
@@ -139,11 +140,13 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
     "file_path": "/path/to/file.ts",
     "content": "..."
   },
-  "tool_result": "..."
+  "tool_result": "...",
+  "duration_ms": 145
 }
 ```
 
-`tool_result`는 PostToolUse에서만 포함됩니다.
+- `tool_result`는 PostToolUse / PostToolUseFailure에서만 포함됩니다
+- `duration_ms`는 PostToolUse / PostToolUseFailure에 포함되며, **사용자 프롬프트 시간을 제외한 실제 도구 실행 시간**입니다 (성능 측정/감사용)
 
 ### 종료 코드
 
@@ -177,9 +180,26 @@ PreToolUse 훅에서는 `action` 필드로 도구 실행을 세밀하게 제어�
 
 // 사용자에게 확인 요청
 { "action": "ask", "message": "이 작업을 허용할까요?" }
+
+// 결정 보류 — 다른 훅 또는 기본 정책에 위임
+{ "action": "defer" }
 ```
 
-> `action`을 생략하면 기본적으로 `"allow"`로 처리됩니다.
+> `action`을 생략하면 기본적으로 `"allow"`로 처리됩니다. `"defer"`는 여러 훅을 체이닝하면서 일부 훅이 결정을 다음 훅에 넘기고 싶을 때 사용합니다.
+
+**PostToolUse 전용 — `hookSpecificOutput.updatedToolOutput`**:
+
+PostToolUse 훅이 도구의 결과를 변형하여 Claude에 전달할 수 있습니다 (모든 도구에서 지원):
+
+```json
+{
+  "hookSpecificOutput": {
+    "updatedToolOutput": "린트 오류가 1건 자동 수정되었습니다.\n\n원본 출력:\n..."
+  }
+}
+```
+
+포매터/린터 결과를 후처리하거나, 비밀 정보를 마스킹한 결과를 Claude에 보여주는 데 활용합니다.
 
 ---
 
@@ -288,6 +308,33 @@ fi
 exit 0
 ```
 
+### MCP 도구 호출 훅 (`type: "mcp_tool"`)
+
+훅이 셸을 거치지 않고 MCP 서버의 도구를 직접 호출할 수 있습니다. 예: 빌드 실패 시 GitHub 이슈 자동 생성.
+
+```json
+{
+  "hooks": [
+    {
+      "event": "PostToolUseFailure",
+      "matcher": "Bash",
+      "if": "Bash(npm run build*)",
+      "type": "mcp_tool",
+      "tool": "mcp__github__create_issue",
+      "input": {
+        "title": "빌드 실패",
+        "body": "${tool_result}"
+      },
+      "timeout": 30
+    }
+  ]
+}
+```
+
+- `tool`은 MCP 도구의 정규화된 이름 (`mcp__<server>__<tool>`)
+- `input`의 값에 훅 stdin 필드를 보간할 수 있습니다 (`${tool_name}`, `${tool_result}` 등)
+- 외부 셸 스크립트 없이 자동화 워크플로우를 구성할 때 유용합니다
+
 ### HTTP 훅 (PreToolUse)
 
 외부 서비스로 HTTP POST를 전송하는 웹훅 방식 훅입니다:
@@ -375,7 +422,10 @@ HTTP 훅의 응답 처리:
 | 주제 | 핵심 포인트 |
 |------|------------|
 | **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 26가지 |
-| **훅 타입** | `command` (셸 명령어) 또는 `http` (HTTP POST) |
+| **훅 타입** | `command` (셸), `http` (HTTP POST), `mcp_tool` (MCP 도구 직접 호출) |
+| **PreToolUse 결정** | `allow`, `deny`, `ask`, `defer` |
+| **PostToolUse 후처리** | `hookSpecificOutput.updatedToolOutput`로 결과 변형 |
+| **성능 측정** | PostToolUse stdin의 `duration_ms` 필드 |
 | **설정** | settings.json의 `hooks` 배열 |
 | **매처** | 정규식으로 도구 이름 필터링 |
 | **입력** | stdin으로 JSON (도구 이름, 입력, 결과) |

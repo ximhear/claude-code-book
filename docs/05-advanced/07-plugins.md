@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-04-16 -->
+<!-- last_updated: 2026-05-07 -->
 
 # 25. 플러그인
 
@@ -30,6 +30,9 @@ Anthropic의 공식 마켓플레이스(`claude-plugins-official`)에는 **60개 
 | **MCP 서버** | 외부 도구/데이터 소스 연결 |
 | **LSP 서버** | Language Server Protocol 통합 |
 | **Rules** | 프로젝트 규칙 파일 |
+| **Themes** | `themes/` 디렉토리로 색상 팔레트 배포 (실험적) |
+| **Monitors** | `monitors/` 디렉토리로 백그라운드 이벤트 모니터 배포 (실험적) |
+| **bin/** | 실행 가능한 바이너리/스크립트 (Bash 도구에서 호출 가능) |
 
 하나의 플러그인에 여러 구성 요소를 조합하여 **통합된 워크플로우**를 제공할 수 있습니다.
 
@@ -81,6 +84,39 @@ Anthropic의 공식 마켓플레이스(`claude-plugins-official`)에는 **60개 
 
 > `/plugin market`은 `/plugin marketplace`의 축약형, `rm`은 `remove`의 축약형입니다.
 
+### CLI에서 플러그인 관리
+
+```bash
+# 매니페스트 검증 ($schema, version, description 등 확장 필드 허용)
+claude plugin validate ./my-plugin
+
+# 사용되지 않는 의존성(고아 플러그인) 정리
+claude plugin prune
+
+# 릴리스용 git 태그 생성 (version 기반)
+claude plugin tag
+
+# 마켓플레이스 추가 (의존성 자동 해결)
+claude plugin marketplace add owner/repo
+```
+
+### 임시 로딩 (URL/디렉토리/zip)
+
+영구 설치 없이 현재 세션에서만 플러그인을 로드할 수 있습니다.
+
+```bash
+# URL의 플러그인 아카이브를 받아 현재 세션에 로드
+claude --plugin-url https://example.com/my-plugin.zip
+
+# 로컬 디렉토리에서 직접 로드
+claude --plugin-dir ./local-plugin
+
+# zip 아카이브에서 로드
+claude --plugin-dir ./bundle.zip
+```
+
+마켓플레이스 단위로 게시할 만큼 안정화되지 않은 플러그인이나, CI에서 일회성으로 사용하는 플러그인에 적합합니다.
+
 ### 설치 예시
 
 ```bash
@@ -122,6 +158,12 @@ my-plugin/
 │   └── post-edit-format.sh
 ├── rules/               # 규칙 파일
 │   └── coding-standards.md
+├── themes/              # 색상 테마 (실험적, "experimental" 블록에 선언)
+│   └── company-dark.json
+├── monitors/            # 백그라운드 이벤트 모니터 (실험적)
+│   └── deploy-watch.sh
+├── bin/                 # 실행 가능한 스크립트/바이너리
+│   └── company-tool
 └── README.md
 ```
 
@@ -157,9 +199,15 @@ my-plugin/
     "lint-server": {
       "command": "${CLAUDE_PLUGIN_ROOT}/mcp/server.js"
     }
+  },
+  "experimental": {
+    "themes": "themes/",
+    "monitors": "monitors/"
   }
 }
 ```
+
+> **`experimental` 블록**: `themes`와 `monitors`는 아직 실험적 기능이므로 매니페스트의 `experimental` 블록 아래에 선언해야 합니다. 향후 안정화 시 최상위로 이동될 수 있습니다.
 
 ### 주요 필드 설명
 

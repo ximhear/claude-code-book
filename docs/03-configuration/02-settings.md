@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-04-16 -->
+<!-- last_updated: 2026-05-07 -->
 
 # 10. settings.json 설정 가이드
 
@@ -275,6 +275,90 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 
 대규모 모노레포에서 worktree 생성 시 지정된 경로만 체크아웃하여 성능을 개선합니다. Git sparse-checkout을 내부적으로 사용합니다.
 
+### TUI 설정 (tui, autoScrollEnabled)
+
+```json
+{
+  "tui": true,
+  "autoScrollEnabled": true
+}
+```
+
+`tui`를 `true`로 설정하면 시작 시 풀스크린 모드로 진입합니다. `autoScrollEnabled`는 풀스크린 자동 스크롤 동작을 제어합니다 (스크롤한 채 입력해도 화면이 점프하지 않도록).
+
+### PR URL 템플릿 (prUrlTemplate)
+
+```json
+{
+  "prUrlTemplate": "https://gitlab.company.com/{owner}/{repo}/-/merge_requests/{number}"
+}
+```
+
+코드 리뷰 링크를 GitHub 외 호스트(GitLab, Bitbucket, GitHub Enterprise)로 생성하도록 템플릿을 지정합니다. `{owner}`, `{repo}`, `{number}` 플레이스홀더를 지원합니다.
+
+### 스킬 호출 모드 오버라이드 (skillOverrides)
+
+```json
+{
+  "skillOverrides": {
+    "deploy-to-prod": "off",
+    "format-code": "user-invocable-only",
+    "scan-secrets": "name-only"
+  }
+}
+```
+
+| 값 | 동작 |
+|----|------|
+| `off` | 스킬을 완전히 비활성화 |
+| `user-invocable-only` | `/skill-name`로 명시 호출만 허용, Claude 자동 호출 차단 |
+| `name-only` | 이름만 컨텍스트에 노출 (본문은 호출 시점에 로드) |
+
+스킬 매니페스트를 변경하지 않고 사용자/관리자 설정으로 호출 정책을 조정합니다.
+
+### 샌드박스 거부 도메인 (sandbox.network.deniedDomains)
+
+```json
+{
+  "sandbox": {
+    "enabled": true,
+    "network": {
+      "deniedDomains": ["*.internal.company.com", "metadata.google.internal"]
+    }
+  }
+}
+```
+
+샌드박스 내에서 특정 도메인으로의 네트워크 접근을 차단합니다. 사내 메타데이터 엔드포인트, 비밀 게이트웨이 등을 보호하는 데 사용합니다.
+
+### MCP 서버 alwaysLoad
+
+```json
+{
+  "mcpServers": {
+    "primary-tools": {
+      "command": "primary-tools-server",
+      "alwaysLoad": true
+    }
+  }
+}
+```
+
+`alwaysLoad: true`로 설정한 MCP 서버는 Tool Search의 동적 지연 로딩을 건너뛰고 시작 시점부터 도구를 항상 노출합니다.
+
+### Status Line 갱신 주기 (refreshInterval)
+
+```json
+{
+  "statusLine": {
+    "command": "~/.claude/statusline.sh",
+    "refreshInterval": 5
+  }
+}
+```
+
+상태 표시줄 명령어의 갱신 주기를 초 단위로 지정합니다 (기본: 0 = 변경 시 재실행).
+
 ---
 
 ## 설정 병합 규칙
@@ -317,6 +401,7 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 |------|------|
 | `CLAUDE_CODE_USE_BEDROCK` | Amazon Bedrock 활성화 |
 | `AWS_BEARER_TOKEN_BEDROCK` | Bedrock API 키 |
+| `ANTHROPIC_BEDROCK_SERVICE_TIER` | Bedrock 서비스 티어 (`default`, `flex`, `priority`) |
 | `CLAUDE_CODE_USE_VERTEX` | Google Vertex AI 활성화 |
 | `ANTHROPIC_VERTEX_PROJECT_ID` | Vertex 프로젝트 ID |
 | `CLAUDE_CODE_USE_FOUNDRY` | Microsoft Foundry 활성화 |
@@ -356,6 +441,20 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `CLAUDE_CODE_NO_FLICKER` | 플리커 없는 alt-screen 렌더링 | — |
 | `MCP_CONNECTION_NONBLOCKING` | `-p` 모드에서 MCP 연결 대기 건너뜀 (5초 상한) | — |
 | `CLAUDE_CODE_SCRIPT_CAPS` | 세션당 스크립트 호출 횟수 제한 | — |
+| `CLAUDE_CODE_HIDE_CWD` | 시작 로고에서 현재 작업 디렉토리 숨김 | — |
+| `DISABLE_UPDATES` | 모든 업데이트 경로 차단 (`DISABLE_AUTOUPDATER`보다 강함) | — |
+| `AI_AGENT` | 서브프로세스에 에이전트 출처 표시용 식별자 | — |
+| `CLAUDE_CODE_FORK_SUBAGENT` | 외부 빌드/SDK에서 서브에이전트 fork 활성화 | — |
+| `CLAUDE_CODE_USE_POWERSHELL_TOOL` | Windows에서 PowerShell 도구를 단계적 활성화 | — |
+| `CLAUDE_CODE_CERT_STORE` | TLS 인증서 저장소 (`os`(기본), `bundled`) | os |
+| `CLAUDE_CODE_FORCE_SYNC_OUTPUT` | 동기화된 터미널 출력 강제 | — |
+| `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` | Homebrew/WinGet 백그라운드 자동 업그레이드 | — |
+| `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` | 게이트웨이 `/v1/models` 자동 디스커버리 옵트인 | — |
+| `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN` | 풀스크린(alt-screen) 렌더러 옵트아웃 | — |
+| `CLAUDE_CODE_SESSION_ID` | Bash 도구 서브프로세스에 노출되는 현재 세션 ID | 자동 |
+| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | 실험적 베타 기능 전부 비활성화 | — |
+| `CLAUDE_CODE_FORK_SUBAGENT` | SDK 비대화 모드에서 서브에이전트 fork | — |
+| `OTEL_LOG_RAW_API_BODIES` | OpenTelemetry로 원본 API 본문 기록 (디버그용) | — |
 
 ### 훅 관련
 
@@ -493,6 +592,10 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `disableDeepLinkRegistration` | `claude-cli://` 프로토콜 핸들러 등록 방지 |
 | `forceRemoteSettingsRefresh` | 시작 시 원격 설정 강제 갱신 (실패 시 종료) |
 | `disableSkillShellExecution` | 스킬/커맨드의 인라인 셸 실행 비활성화 |
+| `allowManagedDomainsOnly` | 관리자 화이트리스트 도메인만 네트워크 허용 |
+| `allowManagedReadPathsOnly` | 관리자 화이트리스트 경로만 읽기 허용 |
+| `blockedMarketplaces` | 금지된 마켓플레이스 (호스트/경로 패턴 지원) |
+| `wslInheritsWindowsSettings` | WSL이 Windows 호스트의 관리자 설정을 상속 |
 
 ### 예시: 엔터프라이즈 잠금 설정
 
