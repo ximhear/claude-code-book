@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-05-07 -->
+<!-- last_updated: 2026-05-23 -->
 
 # 부록 B: CLI 레퍼런스
 
@@ -27,6 +27,7 @@ claude [옵션] [초기 프롬프트]
 | `--from-pr <PR>` | PR 컨텍스트로 세션 시작 |
 | `-w`, `--worktree [이름]` | 격리된 Git worktree에서 세션 시작 |
 | `-n`, `--name <이름>` | 세션 표시 이름 지정 |
+| `--bg` | 백그라운드 세션으로 시작 (Agent View/`/resume`에 `bg`로 표시) |
 | `--no-session-persistence` | 세션 저장 안 함 |
 
 ### 모델과 추론
@@ -112,12 +113,41 @@ claude project purge -i                    # 인터랙티브 선택
 claude project purge --all                 # 모든 프로젝트 상태 삭제
 ```
 
+### `claude agents` (Agent View, 연구 프리뷰)
+
+실행 중인 모든 Claude 세션(인터랙티브 + 백그라운드)을 한 화면에서 관리합니다 (2.1.139 연구 프리뷰).
+
+```bash
+claude agents                              # 모든 세션을 하나의 목록으로 표시
+claude agents --json                       # 세션 목록을 JSON으로 출력 (스크립팅/상태바용)
+claude agents --cwd <경로>                 # 특정 디렉토리로 세션 목록 범위 한정
+```
+
+세션을 디스패치할 때 설정을 함께 지정할 수 있습니다 (2.1.142~):
+
+```bash
+claude agents --add-dir <경로> \
+              --settings <파일> \
+              --mcp-config <파일> \
+              --plugin-dir <경로> \
+              --permission-mode <모드> \
+              --model <모델> \
+              --effort <수준> \
+              --dangerously-skip-permissions
+```
+
+- 세션을 시작하고, 백그라운드로 보내고, 상태와 마지막 응답을 엿보고, 입력이 필요할 때만 다시 들어갈 수 있습니다
+- `--json` 출력은 tmux-resurrect, 상태바, 세션 피커 등 스크립팅에 활용합니다
+- 백그라운드 세션(`claude --bg`)도 같은 목록에 `bg`로 표시됩니다
+
 ### `claude plugin`
 
 ```bash
 claude plugin validate <경로>              # 매니페스트 유효성 검증
 claude plugin prune                        # 고아 의존성 제거
 claude plugin tag                          # 릴리스용 git 태그 생성
+claude plugin details <이름>               # 플러그인 구성 요소 인벤토리 + 세션당 예상 토큰 비용
+claude plugin disable <이름>               # 비활성화 (다른 플러그인이 의존하면 거부)
 claude plugin marketplace add <소스>       # 마켓플레이스 등록
 ```
 
@@ -156,6 +186,7 @@ claude ultrareview [target]                # 비대화형 클라우드 코드 �
 | `ANTHROPIC_BASE_URL` | 커스텀 API 엔드포인트 |
 | `ANTHROPIC_AUTH_TOKEN` | 커스텀 Authorization 헤더 |
 | `ANTHROPIC_CUSTOM_HEADERS` | 커스텀 HTTP 헤더 |
+| `ANTHROPIC_WORKSPACE_ID` | 워크로드 ID 페더레이션용 워크스페이스 식별자 |
 
 ### 클라우드 프로바이더
 
@@ -176,7 +207,9 @@ claude ultrareview [target]                # 비대화형 클라우드 코드 �
 | `ANTHROPIC_MODEL` | 기본 모델 | — |
 | `MAX_THINKING_TOKENS` | 사고 토큰 예산 | 31,999 |
 | `CLAUDE_CODE_EFFORT_LEVEL` | 노력 수준 | high |
+| `CLAUDE_EFFORT` | 활성 노력 수준 (훅·Bash 서브프로세스에 노출, 읽기 전용) | — |
 | `CLAUDE_CODE_MAX_OUTPUT_TOKENS` | 출력 토큰 한도 | 32,000 |
+| `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` | Fast 모드를 Opus 4.6에 고정 (`1`, 기본은 4.7) | — |
 
 ### 동작 제어
 
@@ -215,6 +248,10 @@ claude ultrareview [target]                # 비대화형 클라우드 코드 �
 | `CLAUDE_CODE_SESSION_ID` | Bash 서브프로세스에 세션 ID 노출 |
 | `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | 실험적 베타 기능 비활성화 |
 | `OTEL_LOG_RAW_API_BODIES` | 원본 API 본문 OTel 로깅 (디버그) |
+| `CLAUDE_CODE_PLUGIN_PREFER_HTTPS` | GitHub 플러그인 소스를 SSH 대신 HTTPS로 클론 |
+| `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY` | PowerShell 도구의 `-ExecutionPolicy Bypass` 옵트아웃 (`1`) |
+| `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` | Stop 훅 연속 차단 한도(기본 8) 재정의 |
+| `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` | 엔터프라이즈 세션 품질 설문 재활성화 |
 
 ### 보안
 

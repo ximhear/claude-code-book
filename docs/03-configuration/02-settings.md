@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-05-07 -->
+<!-- last_updated: 2026-05-23 -->
 
 # 10. settings.json 설정 가이드
 
@@ -275,6 +275,35 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 
 대규모 모노레포에서 worktree 생성 시 지정된 경로만 체크아웃하여 성능을 개선합니다. Git sparse-checkout을 내부적으로 사용합니다.
 
+### Worktree 베이스 레퍼런스 (worktree.baseRef)
+
+```json
+{
+  "worktree": {
+    "baseRef": "fresh"
+  }
+}
+```
+
+`--worktree`, `EnterWorktree`, 에이전트 격리 worktree가 어디서 분기할지 결정합니다 (2.1.133):
+
+| 값 | 동작 |
+|----|------|
+| `fresh` | `origin/<기본 브랜치>`에서 분기 (깨끗한 시작) |
+| `head` | 로컬 `HEAD`에서 분기 (현재 작업 상태 유지) |
+
+### Worktree 백그라운드 격리 (worktree.bgIsolation)
+
+```json
+{
+  "worktree": {
+    "bgIsolation": "none"
+  }
+}
+```
+
+`"none"`으로 설정하면 백그라운드 세션이 `EnterWorktree` 없이 작업 복사본을 직접 편집합니다 (2.1.143). 별도 worktree 격리 없이 현재 디렉토리에서 바로 작업하게 됩니다.
+
 ### TUI 설정 (tui, autoScrollEnabled)
 
 ```json
@@ -330,6 +359,20 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 ```
 
 샌드박스 내에서 특정 도메인으로의 네트워크 접근을 차단합니다. 사내 메타데이터 엔드포인트, 비밀 게이트웨이 등을 보호하는 데 사용합니다.
+
+### 샌드박스 바이너리 경로 (sandbox.bwrapPath, sandbox.socatPath)
+
+```json
+{
+  "sandbox": {
+    "enabled": true,
+    "bwrapPath": "/opt/tools/bwrap",
+    "socatPath": "/opt/tools/socat"
+  }
+}
+```
+
+Linux/WSL에서 bubblewrap(`bwrap`)과 `socat` 바이너리가 표준 경로에 없을 때 위치를 직접 지정합니다 (2.1.133, 관리자 설정). 사내 이미지나 비표준 설치 환경에서 샌드박스를 활성화할 때 사용합니다.
 
 ### MCP 서버 alwaysLoad
 
@@ -415,6 +458,8 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `ANTHROPIC_MODEL` | 기본 모델 지정 | — |
 | `MAX_THINKING_TOKENS` | 사고 토큰 예산 | 31,999 |
 | `CLAUDE_CODE_EFFORT_LEVEL` | 노력 수준 | high |
+| `CLAUDE_EFFORT` | 활성 노력 수준 (훅·Bash 서브프로세스에 노출, 읽기 전용) | — |
+| `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` | Fast 모드를 Opus 4.6에 고정 (`1`) | — |
 | `CLAUDE_CODE_MAX_OUTPUT_TOKENS` | 출력 토큰 한도 | 32,000 |
 
 ### 동작 제어
@@ -455,6 +500,16 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | 실험적 베타 기능 전부 비활성화 | — |
 | `CLAUDE_CODE_FORK_SUBAGENT` | SDK 비대화 모드에서 서브에이전트 fork | — |
 | `OTEL_LOG_RAW_API_BODIES` | OpenTelemetry로 원본 API 본문 기록 (디버그용) | — |
+| `CLAUDE_CODE_PLUGIN_PREFER_HTTPS` | GitHub 플러그인 소스를 SSH 대신 HTTPS로 클론 | — |
+| `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY` | PowerShell 도구 `-ExecutionPolicy Bypass` 옵트아웃 | — |
+| `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` | Stop 훅 연속 차단 한도 재정의 | 8 |
+| `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` | 엔터프라이즈 세션 품질 설문 재활성화 | — |
+
+### 인증·페더레이션
+
+| 변수 | 용도 |
+|------|------|
+| `ANTHROPIC_WORKSPACE_ID` | 워크로드 ID 페더레이션용 워크스페이스 식별자 |
 
 ### 훅 관련
 
@@ -596,6 +651,10 @@ Claude가 접근할 수 있는 추가 디렉토리를 등록합니다.
 | `allowManagedReadPathsOnly` | 관리자 화이트리스트 경로만 읽기 허용 |
 | `blockedMarketplaces` | 금지된 마켓플레이스 (호스트/경로 패턴 지원) |
 | `wslInheritsWindowsSettings` | WSL이 Windows 호스트의 관리자 설정을 상속 |
+| `parentSettingsBehavior` | SDK `managedSettings` 병합 정책 (`first-wins` \| `merge`) |
+| `autoMode.hard_deny` | Auto Mode 분류기에서 무조건 차단할 규칙 |
+
+> `autoMode.hard_deny`는 Auto Mode(`/model auto`)의 분류기가 조건에 관계없이 항상 거부할 작업을 정의합니다 (2.1.136). `parentSettingsBehavior`는 SDK로 상위 관리 설정을 병합할 때 첫 정책을 유지(`first-wins`)할지 합칠지(`merge`) 결정합니다 (2.1.133).
 
 ### 예시: 엔터프라이즈 잠금 설정
 

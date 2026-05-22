@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-05-07 -->
+<!-- last_updated: 2026-05-23 -->
 
 # 부록 D: 용어집
 
@@ -9,8 +9,10 @@
 | 용어 | 설명 |
 |------|------|
 | **Agent Teams** | 여러 Claude 세션이 병렬로 협력하는 실험적 기능. 공유 태스크 리스트와 직접 메시징 지원 |
+| **Agent View** | `claude agents`로 실행 중인 모든 세션(인터랙티브+백그라운드)을 한 화면에서 관리하는 연구 프리뷰. `--json`으로 스크립팅 가능 |
 | **Agentic Loop** | Claude Code의 핵심 실행 주기: 컨텍스트 수집 → 행동 → 검증 |
 | **Auto Mode** | `/model auto` — 작업 난이도와 사용량 한도에 따라 Opus/Sonnet/Haiku를 자동 선택하는 모델 모드. Max 구독자 점진적 출시 |
+| **Background Session** | `claude --bg`로 백그라운드에서 실행되는 세션. Agent View와 `/resume`에 `bg`로 표시되며 나중에 재개 가능 |
 | **Channels** | 외부 메시징 플랫폼(Telegram, Discord)에서 실행 중인 세션으로 이벤트를 푸시하는 MCP 서버 기반 기능. `--channels` 플래그로 활성화 |
 | **Checkpoint** | 파일 수정 전 자동 생성되는 스냅샷. `/rewind`로 복원 가능. 30일 보관 |
 | **CLAUDE.md** | 프로젝트별 영구 지침 파일. 세션 시작 시 자동 로드 |
@@ -19,8 +21,9 @@
 | **Effort Level** | Extended Thinking의 추론 깊이 제어. ○ Low, ◐ Medium, ● High, ⬤ xHigh 네 단계 (xHigh는 Opus 4.7 전용/코딩 권장). `/effort` 슬라이더 또는 모델 선택기에서 조절 |
 | **Elicitation** | MCP 서버가 사용자에게 추가 정보를 요청하는 메커니즘. `Elicitation`/`ElicitationResult` 훅 이벤트로 제어 가능 |
 | **Extended Thinking** | Claude가 응답 전 내부적으로 추론하는 기능. Opus는 적응형 |
-| **Fast Mode** | 동일한 모델에서 빠른 출력을 제공하는 모드. `/fast` 토글 |
+| **Fast Mode** | 동일한 모델에서 빠른 출력을 제공하는 모드. `/fast` 토글. 기본 Opus 4.7 (2.1.142, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE`로 4.6 고정) |
 | **Fork** | 세션을 복사하여 독립적으로 진행. `--fork-session` |
+| **Goal** | `/goal` — 완료 조건을 설정하면 Claude가 충족될 때까지 여러 턴에 걸쳐 자율 진행. `/loop`(간격 기반)와 대비되는 조건 기반 자동화 |
 | **Headless Mode** | `-p` 플래그로 실행하는 비대화형 모드 |
 | **Hooks** | 이벤트에 반응하는 자동화 시스템 (PreToolUse, PostToolUse 등) |
 | **Loop** | `/loop`로 프롬프트를 반복 실행하는 스케줄링 기능. 시간 간격 또는 Cron 표현식 지원 |

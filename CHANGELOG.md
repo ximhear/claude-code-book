@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.10.0] - 2026-05-23
+> Claude Code 2.1.133 ~ 2.1.148 반영
+### Added
+- 부록B/5장: **Agent View** (`claude agents`, 연구 프리뷰) — 모든 세션 통합 관리, `--json`, `--cwd`, 디스패치 설정 플래그(`--add-dir`/`--settings`/`--mcp-config`/`--plugin-dir`/`--permission-mode`/`--model`/`--effort`/`--dangerously-skip-permissions`)
+- 부록B/5장: **백그라운드 세션** `claude --bg`, `/resume`에서 `bg` 표시
+- 5장: `/goal` (완료 조건 기반 자율 진행) 슬래시 커맨드 추가
+- 5장: `/scroll-speed` (마우스 휠 스크롤 속도) 슬래시 커맨드 추가
+- 5장/8장: `/model`이 현재 세션에만 적용, 선택기 `d` 키로 기본값 지정
+- 8장: Fast 모드 기본 모델 **Opus 4.7**로 변경 (`CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE`로 4.6 고정)
+- 10장: 설정 `worktree.baseRef`(`fresh`/`head`), `worktree.bgIsolation`, `sandbox.bwrapPath`/`socatPath`, `parentSettingsBehavior`, `autoMode.hard_deny`
+- 10장/부록B: 환경 변수 `CLAUDE_EFFORT`, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE`, `CLAUDE_CODE_PLUGIN_PREFER_HTTPS`, `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY`, `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`, `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL`, `ANTHROPIC_WORKSPACE_ID`
+- 20장: 훅 `args` exec 형식(셸 미경유), `continueOnBlock`(PostToolUse), `terminalSequence` 출력, `effort.level` 입력 + `$CLAUDE_EFFORT`
+- 20장: Stop/SubagentStop 입력에 `background_tasks`/`session_crons`, MCP stdio에 `CLAUDE_PROJECT_DIR`
+- 25장/부록B: `claude plugin details`(구성 요소+토큰 비용), `claude plugin disable` 의존성 강제, 루트 `SKILL.md` 단일 스킬 노출
+- 용어집: Agent View, Background Session, Goal 추가, Fast Mode 갱신
+### Changed
+- 5장: `/simplify` → **`/code-review`** 이름 변경 (정확성 버그 보고, 노력 수준 인자, `--comment` PR 인라인 코멘트)
+
 ## [0.9.0] - 2026-05-07
 ### Added
 - 8장: **Claude Opus 4.7** 모델 추가 (Max/Team Premium 기본), **xhigh** 노력 수준

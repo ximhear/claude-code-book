@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-05-07 -->
+<!-- last_updated: 2026-05-23 -->
 
 # 25. 플러그인
 
@@ -96,9 +96,18 @@ claude plugin prune
 # 릴리스용 git 태그 생성 (version 기반)
 claude plugin tag
 
+# 구성 요소 인벤토리 + 세션당 예상 토큰 비용 표시
+claude plugin details security-scanner
+
+# 비활성화 (다른 플러그인이 의존하면 거부)
+claude plugin disable security-scanner
+
 # 마켓플레이스 추가 (의존성 자동 해결)
 claude plugin marketplace add owner/repo
 ```
+
+> **의존성 강제 (2.1.143)**: `claude plugin disable`은 다른 활성 플러그인이 대상에 의존하고 있으면 비활성화를 **거부**하고 의존 체인을 알려줍니다.
+> **`claude plugin details` (2.1.139)**: 설치 전후로 플러그인이 제공하는 커맨드·에이전트·스킬·훅·MCP/LSP 서버 목록과 **세션당 예상 컨텍스트 토큰 비용**을 확인할 수 있습니다. `/plugin`의 Discover/Browse 화면에서도 동일 정보가 표시됩니다.
 
 ### 임시 로딩 (URL/디렉토리/zip)
 
@@ -166,6 +175,8 @@ my-plugin/
 │   └── company-tool
 └── README.md
 ```
+
+> **루트 SKILL.md (2.1.142)**: 플러그인 루트에 `SKILL.md`를 두면 `skills/` 하위 디렉토리가 없어도 단일 스킬로 자동 노출됩니다. 스킬 하나만 제공하는 가벼운 플러그인에 편리합니다.
 
 > 핵심: 매니페스트 파일은 **루트가 아닌 `.claude-plugin/plugin.json`**에 위치합니다.
 

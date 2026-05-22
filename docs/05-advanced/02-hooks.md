@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-05-07 -->
+<!-- last_updated: 2026-05-23 -->
 
 # 20. Hooks — 이벤트 기반 자동화
 
@@ -74,15 +74,28 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | `event` | O | 이벤트 유형 |
 | `type` | O | `"command"` (셸 명령어), `"http"` (HTTP POST) 또는 `"mcp_tool"` (MCP 도구 직접 호출) |
 | `command` | △ | `type: "command"`일 때 실행할 명령어 또는 스크립트 경로 |
+| `args` | | `type: "command"`의 **exec 형식**. `string[]`로 주면 셸을 거치지 않고 명령을 직접 실행 (인용/이스케이프 문제 회피) |
 | `url` | △ | `type: "http"`일 때 POST 요청 대상 URL |
 | `tool` | △ | `type: "mcp_tool"`일 때 호출할 MCP 도구 이름 (예: `mcp__github__create_issue`) |
 | `headers` | | HTTP 훅 전용. 추가 헤더 (`$VAR_NAME` 환경변수 보간 지원) |
 | `allowedEnvVars` | | HTTP 훅 전용. 헤더에서 보간 허용할 환경변수 목록 |
 | `matcher` | | 도구 이름 필터 (정규식) |
 | `if` | | 조건부 실행 필터 (권한 규칙 문법, 예: `"Bash(git *)"`) |
+| `continueOnBlock` | | PostToolUse 전용. 차단(`block`) 결과를 Claude에 피드백으로 전달하고 작업을 계속 진행 |
 | `timeout` | | 실행 시간 제한 (초) |
 
 > △ = `type`에 따라 필수. `command` 타입이면 `command`, `http` 타입이면 `url`, `mcp_tool` 타입이면 `tool` 필수.
+
+**exec 형식 (`args`)**: 셸 해석 없이 명령을 직접 실행하려면 `args` 배열을 사용합니다 (2.1.139). 경로에 공백·특수문자가 있어도 안전합니다.
+
+```json
+{
+  "event": "PostToolUse",
+  "type": "command",
+  "command": "prettier",
+  "args": ["--write", "$CLAUDE_FILE_PATHS"]
+}
+```
 
 ### 매처 패턴
 
@@ -127,9 +140,12 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
   "transcript_path": "/path/to/transcript",
   "cwd": "/path/to/project",
   "hook_event_name": "PreToolUse",
-  "permission_mode": "default"
+  "permission_mode": "default",
+  "effort": { "level": "high" }
 }
 ```
+
+- `effort.level`은 현재 활성 노력 수준입니다 (2.1.133). 같은 값이 `$CLAUDE_EFFORT` 환경 변수로도 훅·Bash 서브프로세스에 노출되어, 노력 수준에 따라 훅 동작을 분기할 수 있습니다
 
 **도구 이벤트 추가 필드 (PreToolUse / PostToolUse):**
 
@@ -147,6 +163,19 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 
 - `tool_result`는 PostToolUse / PostToolUseFailure에서만 포함됩니다
 - `duration_ms`는 PostToolUse / PostToolUseFailure에 포함되며, **사용자 프롬프트 시간을 제외한 실제 도구 실행 시간**입니다 (성능 측정/감사용)
+
+**Stop / SubagentStop 추가 필드:**
+
+```json
+{
+  "background_tasks": [ { "id": "...", "status": "running" } ],
+  "session_crons": [ { "id": "...", "schedule": "0 */2 * * *" } ]
+}
+```
+
+- `background_tasks`와 `session_crons`는 Stop/SubagentStop 훅 입력에 포함됩니다. 아직 실행 중인 백그라운드 작업이나 예약된 `/loop` 태스크가 있으면 종료(stop) 훅에서 이를 확인해 차단 여부를 결정할 수 있습니다
+
+> **MCP stdio 서버 환경**: MCP stdio 서버도 이제 환경에서 `CLAUDE_PROJECT_DIR`를 받습니다 (2.1.139). 프로젝트 루트 기준 경로 해석이 필요한 서버에서 활용할 수 있습니다.
 
 ### 종료 코드
 
@@ -166,6 +195,18 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
   "continue": true
 }
 ```
+
+**터미널 제어 시퀀스 — `terminalSequence`**:
+
+훅이 제어 터미널 없이도 데스크톱 알림, 창 제목, 벨(bell) 등을 내보낼 수 있습니다 (2.1.141):
+
+```json
+{
+  "terminalSequence": "]0;빌드 완료"
+}
+```
+
+- 백그라운드/원격 환경에서 OS 알림을 띄우거나 터미널 탭 제목을 갱신할 때 사용합니다
 
 **PreToolUse 전용 — `action` 필드**:
 
