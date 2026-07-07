@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-05-23 -->
+<!-- last_updated: 2026-07-07 -->
 
 # 20. Hooks — 이벤트 기반 자동화
 
@@ -46,6 +46,9 @@ Hooks는 Claude Code의 특정 **이벤트에 반응하여 셸 명령어를 자�
 | **ElicitationResult** | 엘리시테이션 결과 반환 시 | 결과 감사, 후처리 |
 | **PermissionDenied** | 자동 모드에서 권한 거부 시 | `{retry: true}` 반환으로 재시도 |
 | **InstructionsLoaded** | CLAUDE.md / rules 파일 로드 시 | 지침 감사, 동적 규칙 주입 |
+| **MessageDisplay** | 어시스턴트 메시지 표시 직전 | 표시되는 메시지 텍스트 변형/숨김 (2.1.152) |
+
+> **셀프호스트 러너 `post-session` 훅 (2.1.169)**: 셀프호스트 러너(self-hosted runner)용 라이프사이클 훅으로, 세션이 끝난 뒤 러너 정리 작업을 실행합니다. 함께 SIGTERM→SIGKILL 종료 윈도우 설정도 추가되어 정리 시간을 확보할 수 있습니다.
 
 ---
 
@@ -241,6 +244,36 @@ PostToolUse 훅이 도구의 결과를 변형하여 Claude에 전달할 수 있�
 ```
 
 포매터/린터 결과를 후처리하거나, 비밀 정보를 마스킹한 결과를 Claude에 보여주는 데 활용합니다.
+
+**SessionStart 전용 — `reloadSkills` / `sessionTitle`** (2.1.152):
+
+```json
+{
+  "reloadSkills": true,
+  "hookSpecificOutput": {
+    "sessionTitle": "결제 모듈 리팩토링"
+  }
+}
+```
+
+- `reloadSkills: true` — 스킬 디렉토리를 다시 스캔하여, 세션 시작 시 설치한 스킬을 **재시작 없이 같은 세션에서** 사용할 수 있게 합니다 (`/reload-skills` 커맨드와 동일한 효과)
+- `hookSpecificOutput.sessionTitle` — 세션 시작/재개 시 세션 제목을 설정합니다
+
+**MessageDisplay 전용** (2.1.152): 어시스턴트 메시지가 화면에 렌더링되기 직전에 텍스트를 변형하거나 숨길 수 있습니다. 민감 정보 마스킹, 표시용 후처리 등에 활용합니다.
+
+**Stop / SubagentStop 전용 — `hookSpecificOutput.additionalContext`** (2.1.163):
+
+Stop·SubagentStop 훅이 종료 시점에 **추가 컨텍스트를 반환**하여 다음 턴에 주입할 수 있습니다:
+
+```json
+{
+  "hookSpecificOutput": {
+    "additionalContext": "린트 결과: 경고 2건 남음. 다음 응답에서 처리 필요."
+  }
+}
+```
+
+- 종료 훅에서 얻은 정보(테스트 결과, 잔여 작업 등)를 다음 턴 컨텍스트로 전달할 때 사용합니다
 
 ---
 
@@ -462,10 +495,11 @@ HTTP 훅의 응답 처리:
 
 | 주제 | 핵심 포인트 |
 |------|------------|
-| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop 등 26가지 |
+| **이벤트** | PreToolUse, PostToolUse, SessionStart, Stop, MessageDisplay 등 27가지 |
 | **훅 타입** | `command` (셸), `http` (HTTP POST), `mcp_tool` (MCP 도구 직접 호출) |
 | **PreToolUse 결정** | `allow`, `deny`, `ask`, `defer` |
 | **PostToolUse 후처리** | `hookSpecificOutput.updatedToolOutput`로 결과 변형 |
+| **Stop/SubagentStop 후처리** | `hookSpecificOutput.additionalContext`로 다음 턴에 컨텍스트 주입 (2.1.163) |
 | **성능 측정** | PostToolUse stdin의 `duration_ms` 필드 |
 | **설정** | settings.json의 `hooks` 배열 |
 | **매처** | 정규식으로 도구 이름 필터링 |

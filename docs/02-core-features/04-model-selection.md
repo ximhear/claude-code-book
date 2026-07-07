@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-05-23 -->
+<!-- last_updated: 2026-07-07 -->
 
 # 8. 모델 선택과 전환
 
@@ -10,18 +10,60 @@
 
 Claude Code는 다음 모델들을 지원합니다.
 
-### Claude Opus 4.7 — 최신 최강 추론 모델
+### Claude Sonnet 5 — 새 기본 모델 (2.1.197)
+
+| 항목 | 내용 |
+|------|------|
+| **모델 ID** | `claude-sonnet-5` |
+| **별칭** | `sonnet`, `default` (현재 기본) |
+| **컨텍스트 윈도우** | 1M (네이티브) |
+| **최대 출력** | 64K 토큰 |
+| **적응형 추론** | 지원 — ○ Low / ◐ Medium / ● High / ⬤ xHigh |
+| **기본 노력 수준** | **high** (Claude API·Claude Code 공통) |
+| **가격** | $3 / 1M 입력, $15 / 1M 출력 (도입가 $2 / $10, ~2026-08-31) |
+| **적합한 용도** | 속도와 지능의 최적 균형 — 일상 코딩부터 에이전틱 작업까지 |
+
+> **2.1.197부터 기본 모델**: Claude Sonnet 5는 Claude Code의 **새 기본 모델**입니다. 네이티브 **1M 토큰** 컨텍스트를 제공하며 기본 노력 수준은 **high**입니다(Claude API와 Claude Code 모두). "속도와 지능의 최적 균형(best combination of speed and intelligence)"을 지향하며, 100만 토큰당 **도입가 입력 $2 / 출력 $10**이 2026-08-31까지 적용되고 이후 **정가 $3 / $15**로 전환됩니다. 이전 기본 모델이던 **Opus 4.8**은 복잡한 에이전틱 코딩·엔터프라이즈 작업의 권장 모델로 유지됩니다(아래 참고).
+
+### Claude Opus 4.8 — 복잡 에이전틱 코딩 권장 모델
+
+| 항목 | 내용 |
+|------|------|
+| **모델 ID** | `claude-opus-4-8` |
+| **별칭** | `opus` |
+| **컨텍스트 윈도우** | 200K (기본) / 1M (베타, `claude-opus-4-8[1m]`) |
+| **최대 출력** | 64K 토큰 (기본) / 128K 토큰 (상한) |
+| **적응형 추론** | 지원 — ○ Low / ◐ Medium / ● High / ⬤ xHigh |
+| **기본 노력 수준** | **high** (가장 어려운 작업은 `/effort xhigh`) |
+| **적합한 용도** | 복잡한 에이전틱 코딩(공식 권장), 아키텍처 결정, 복잡한 디버깅, 대규모 리팩토링, 엔터프라이즈 |
+
+> **2026-05 출시 (2.1.154), 2.1.197부터 비기본**: Opus 4.8은 2.1.197에서 Sonnet 5에 기본 모델 자리를 넘겨주었지만, **복잡한 에이전틱 코딩과 엔터프라이즈 작업의 권장 모델**로 계속 유지됩니다. **high** 노력 수준으로 동작하며, 가장 어려운 작업에는 `/effort xhigh`를 사용하세요. Fast 모드도 Opus 4.8에서 훨씬 저렴합니다(아래 [Fast 모드](#fast-모드) 참고). 2.1.156에서 Opus 4.8의 thinking 블록 관련 API 오류가 수정되었습니다.
+
+### Claude Fable 5 — Mythos-class 최고 능력 모델 (2.1.170)
+
+| 항목 | 내용 |
+|------|------|
+| **모델 ID** | `claude-fable-5` |
+| **별칭** | `fable` |
+| **컨텍스트 윈도우** | 1M |
+| **가격** | $10 / 1M 입력, $50 / 1M 출력 |
+| **적응형 추론** | adaptive thinking 상시 활성 |
+| **적합한 용도** | 최고 난도의 추론·분석이 필요한 작업 |
+
+> **2.1.170부터 지원**: Claude Fable 5는 "Mythos-class" 모델로, Anthropic이 널리 공개한 모델 중 **가장 능력이 높은** 모델입니다(GA 2026-06-09). adaptive thinking이 항상 켜져 있어 별도의 노력 수준 조절 없이도 깊은 추론을 수행합니다. Claude Code에서 사용하려면 CLI를 **2.1.170 이상**으로 업데이트하세요. 이후 2.1.173에서 `[1m]` 접미사 자동 정규화, 2.1.174에서 usage-credit 배너 표기가 수정되었습니다.
+
+### Claude Opus 4.7 — 이전 세대 추론 모델
 
 | 항목 | 내용 |
 |------|------|
 | **모델 ID** | `claude-opus-4-7` |
-| **별칭** | `opus` (현재 기본) |
-| **컨텍스트 윈도우** | 200K (기본) / 1M (베타, `claude-opus-4-7[1m]`) |
+| **별칭** | `claude-opus-4-7`(특정 시점), `claude-opus-4-7[1m]` (1M 컨텍스트) |
+| **컨텍스트 윈도우** | 200K (기본) / 1M (베타) |
 | **최대 출력** | 64K 토큰 (기본) / 128K 토큰 (상한) |
 | **적응형 추론** | 지원 — ○ Low / ◐ Medium / ● High / ⬤ xHigh |
-| **적합한 용도** | 코딩(공식 권장), 아키텍처 결정, 복잡한 디버깅, 대규모 리팩토링 |
+| **적합한 용도** | 코딩, 아키텍처 결정, 복잡한 디버깅 |
 
-> **2026-04 출시**: Opus 4.7은 Max/Team Premium 사용자에게 기본 모델로 제공됩니다. **xhigh** 노력 수준은 코딩 작업용으로 새로 추가된 단계로, Anthropic이 권장하는 기본 추론 깊이입니다.
+> **2026-04 출시**: Opus 4.7은 Opus 4.8 출시 전까지 기본 모델이었습니다. **xhigh** 노력 수준을 지원합니다.
 
 ### Claude Opus 4.6 — 이전 세대 추론 모델
 
@@ -33,7 +75,9 @@ Claude Code는 다음 모델들을 지원합니다.
 | **최대 출력** | 64K (기본) / 128K (상한) |
 | **가격** | $5 / 1M 입력, $25 / 1M 출력 |
 
-> **기본 노력 수준**: API 키, Bedrock/Vertex/Foundry, Team, Enterprise 사용자는 기본 노력 수준이 **high**입니다. Opus 4.7에서는 코딩 작업에 **xhigh**가 권장됩니다. "ultrathink"를 프롬프트에 포함하면 다음 턴에 **high** effort가 명시적으로 활성화됩니다. 현재 노력 수준은 로고/스피너 옆에 시각적으로 표시됩니다 (○ low, ◐ medium, ● high, ⬤ xhigh). `/effort` 커맨드 또는 인터랙티브 슬라이더로 변경할 수 있습니다.
+> **기본 노력 수준**: API 키, Bedrock/Vertex/Foundry, Team, Enterprise 사용자는 기본 노력 수준이 **high**입니다(Opus 4.8 포함). 가장 어려운 작업에는 **xhigh**가 권장됩니다. "ultrathink"를 프롬프트에 포함하면 다음 턴에 **high** effort가 명시적으로 활성화됩니다. 현재 노력 수준은 로고/스피너 옆에 시각적으로 표시됩니다 (○ low, ◐ medium, ● high, ⬤ xhigh). `/effort` 커맨드 또는 인터랙티브 슬라이더로 변경할 수 있습니다(2.1.154에서 슬라이더 레이블이 "Speed"/"Intelligence" → **"Faster"/"Smarter"**로 변경).
+
+> **Lean 시스템 프롬프트 (2.1.154)**: Haiku, Sonnet, Opus 4.7 및 이전 모델을 제외한 모든 모델에서 **간결한(lean) 시스템 프롬프트가 기본**으로 적용됩니다. 시스템 프롬프트가 짧아져 컨텍스트 여유가 늘고 응답이 빨라집니다.
 
 ### Auto Mode — 모델 자동 선택
 
@@ -45,18 +89,20 @@ Claude Code는 다음 모델들을 지원합니다.
 
 `/model auto`로 활성화하면 Claude Code가 작업 컨텍스트와 남은 사용량 한도를 함께 고려해 모델을 동적으로 전환합니다. 권한 모드와 별개로, 최대 효율을 원할 때 사용합니다.
 
-### Claude Sonnet 4.6 — 속도와 품질의 균형
+> **서드파티 프로바이더 Auto Mode (2.1.158)**: Amazon Bedrock·Google Vertex·Microsoft Foundry에서도 Auto Mode를 사용할 수 있습니다. 이 환경에서는 `CLAUDE_CODE_ENABLE_AUTO_MODE=1`로 옵트인해야 하며, 자동 선택 대상은 Opus 4.7/4.8입니다.
+
+### Claude Sonnet 4.6 — 이전 세대 Sonnet
 
 | 항목 | 내용 |
 |------|------|
 | **모델 ID** | `claude-sonnet-4-6` |
-| **별칭** | `sonnet` |
+| **별칭** | `claude-sonnet-4-6`(특정 시점 고정) |
 | **컨텍스트 윈도우** | 200K (기본) / 1M (베타) |
 | **최대 출력** | 64K 토큰 |
 | **가격** | $3 / 1M 입력, $15 / 1M 출력 |
 | **적합한 용도** | 일상적 코딩, 기능 구현, 버그 수정, 코드 리뷰 |
 
-Sonnet 4.6은 Opus 수준의 코딩 성능에 더 나은 도구 사용 안정성을 제공합니다. 사용자 비교에서 Sonnet 4.5 대비 **70%** 선호, 과도한 엔지니어링과 환각이 감소했습니다.
+Sonnet 4.6은 Sonnet 5 출시 전까지 `sonnet` 별칭이 가리키던 이전 세대 Sonnet입니다. Opus 수준의 코딩 성능에 더 나은 도구 사용 안정성을 제공하며, 사용자 비교에서 Sonnet 4.5 대비 **70%** 선호, 과도한 엔지니어링과 환각이 감소했습니다. 버전을 고정하려면 전체 ID `claude-sonnet-4-6`을 사용하세요.
 
 ### Claude Haiku 4.5 — 빠르고 효율적
 
@@ -78,16 +124,19 @@ Sonnet 4.6은 Opus 수준의 코딩 성능에 더 나은 도구 사용 안정성
 
 | 별칭 | 대상 | 설명 |
 |------|------|------|
-| `default` | 계정 유형에 따라 다름 | Max/Teams: Opus 4.7, Pro: Opus 4.6/4.7 |
-| `opus` | Claude Opus (최신) | 현재 Opus 4.7 |
-| `sonnet` | Claude Sonnet 4.6 | 최신 Sonnet |
+| `default` | 계정 유형에 따라 다름 | 현재 Sonnet 5 (2.1.197~) |
+| `sonnet` | Claude Sonnet (최신) | 현재 Sonnet 5 |
+| `opus` | Claude Opus (최신) | 현재 Opus 4.8 |
+| `fable` | Claude Fable 5 | Mythos-class 최고 능력 (2.1.170~) |
 | `haiku` | Claude Haiku 4.5 | 최신 Haiku |
 | `auto` | Opus / Sonnet / Haiku 자동 선택 | Max 구독자, 작업 난이도와 한도 기반 |
 | `opusplan` | Opus + Sonnet | 하이브리드 모드 (아래 설명) |
 | `opus[1m]` | Opus (1M 컨텍스트) | 100만 토큰 컨텍스트 |
-| `sonnet[1m]` | Sonnet 4.6 (1M 컨텍스트) | 100만 토큰 컨텍스트 |
+| `sonnet[1m]` | Sonnet (1M 컨텍스트) | 100만 토큰 컨텍스트 |
 
-> **특정 버전 고정**: 버전을 고정하려면 전체 모델 ID를 사용하세요 (예: `claude-sonnet-4-6`). 별칭은 업데이트 시 자동으로 최신 버전을 가리킵니다. 모델 ID는 새 버전 출시 시 변경될 수 있으므로, 최신 ID는 [Anthropic 공식 문서](https://docs.anthropic.com/en/docs/about-claude/models)에서 확인하세요.
+> **특정 버전 고정**: 버전을 고정하려면 전체 모델 ID를 사용하세요 (예: `claude-sonnet-4-6`). 별칭은 업데이트 시 자동으로 최신 버전을 가리킵니다 — `sonnet`은 2.1.197부터 Sonnet 5를 가리킵니다. 모델 ID는 새 버전 출시 시 변경될 수 있으므로, 최신 ID는 [Anthropic 공식 문서](https://docs.anthropic.com/en/docs/about-claude/models)에서 확인하세요.
+
+> **모델 폐기 경고 (2.1.183)**: 폐기되었거나 자동 업데이트 대상인 모델을 요청하면 stderr로 경고가 표시됩니다. `-p`(headless) 모드와 에이전트 프론트매터의 `model` 필드에 지정한 모델에도 적용됩니다.
 
 ---
 
@@ -108,9 +157,9 @@ Sonnet 4.6은 Opus 수준의 코딩 성능에 더 나은 도구 사용 안정성
 ```
 
 - 현재 응답 생성 중에도 전환할 수 있습니다
-- Opus 4.6/4.7 선택 시 **좌/우 화살표**로 노력 수준을 조절합니다 (low/medium/high/xhigh, xhigh는 Opus 4.7 전용)
+- Opus 선택 시 **좌/우 화살표**로 노력 수준을 조절합니다 (low/medium/high/xhigh)
 - 인자 없이 `/model`을 입력하면 선택 화면이 나타납니다
-- **현재 세션에만 적용**됩니다 (2.1.144). 새 세션의 기본값으로 만들려면 선택기에서 **`d` 키**를 누르세요
+- **선택한 모델이 새 세션의 기본값으로 저장**됩니다 (2.1.153, IDE와 동일). 현재 세션에만 적용하려면 선택기에서 **`s` 키**를 누르세요. (`modelPicker:setAsDefault` 키바인딩을 커스터마이즈했다면 `modelPicker:thisSessionOnly`로 이름이 바뀌었습니다.)
 - `/model auto`로 자동 선택 모드로 전환할 수 있습니다 (Max 구독자 점진적 출시)
 - 게이트웨이(`ANTHROPIC_BASE_URL`)에서 제공하는 모델은 자동으로 표시됩니다 (`CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1`로 옵트인)
 
@@ -222,9 +271,14 @@ claude --model sonnet[1m]
 
 | 모델 | 1M 컨텍스트 | 기본 컨텍스트 |
 |------|:-----------:|:------------:|
-| Opus 4.6 | 지원 (베타) | 200K |
+| Sonnet 5 | 네이티브 지원 | 1M |
+| Fable 5 | 네이티브 지원 | 1M |
+| Opus 4.8 | 지원 (베타) | 200K |
+| Opus 4.7 | 지원 (베타) | 200K |
 | Sonnet 4.6 | 지원 (베타) | 200K |
 | Haiku 4.5 | 미지원 | 200K |
+
+> Sonnet 5와 Fable 5는 `[1m]` 접미사 없이도 기본적으로 1M 컨텍스트를 사용합니다.
 
 ### 언제 1M 컨텍스트가 필요한가
 
@@ -254,13 +308,15 @@ Opus에서 더 빠른 응답을 위한 모드입니다.
 - **동일한 Opus 모델을 더 빠른 출력으로** 사용합니다 (작은 모델로 다운그레이드하지 않음)
 - 다시 `/fast`를 입력하면 비활성화됩니다
 
-> **기본 모델 변경 (2.1.142)**: Fast 모드는 이제 **Opus 4.7**을 기본으로 사용합니다 (이전 4.6). 4.6에 고정하려면 `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1`을 설정하세요.
+> **Opus 4.8 Fast 모드 (2.1.154)**: Fast 모드는 이제 **Opus 4.8**을 기본으로 사용하며, **표준 요금의 2배로 2.5배 빠른 출력**을 제공합니다(이전보다 훨씬 저렴). Opus 4.6에서 Fast 모드를 쓰려면 `/model claude-opus-4-6`으로 전환한 뒤 `/fast on`을 사용하세요.
+
+> **`CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거 (2.1.160)**: 2.1.154에서 폐지된 이 환경 변수는 **2.1.160에서 실제로 제거되어 이제 아무 동작도 하지 않습니다(no-op)**. 위의 `/model claude-opus-4-6` + `/fast on` 방식을 사용하세요.
 
 ### Fast 모드 동작
 
 ```
-일반 모드:  Opus 4.7 → 표준 속도
-Fast 모드:  Opus 4.7 → 빠른 출력 (동일 모델)
+일반 모드:  Opus 4.8 → 표준 속도
+Fast 모드:  Opus 4.8 → 2.5배 빠른 출력 (동일 모델, 2배 요금)
 ```
 
 ### 레이트 리밋 시 동작
@@ -357,6 +413,10 @@ export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-6'
 - API 키: `ANTHROPIC_FOUNDRY_API_KEY`
 - Microsoft Entra ID: Azure SDK 자격 증명 체인
 
+### Claude Platform on AWS 게이트웨이 (anthropicAws) (2.1.198)
+
+게이트웨이 업스트림으로 **Claude Platform on AWS**(`anthropicAws`)가 추가되었습니다. 게이트웨이가 `model-not-found`를 반환하면 폴백 체인의 다음 모델로 전진합니다(하드 실패로 중단하지 않음).
+
 ---
 
 ## 모델 선택 전략
@@ -397,9 +457,9 @@ Claude Code는 레이트 리밋 상황에서 자동으로 모델을 전환합니
 
 | 주제 | 핵심 포인트 |
 |------|------------|
-| **모델** | Opus 4.7 (최신/코딩 권장), Opus 4.6 (이전 세대), Sonnet 4.6 (균형), Haiku 4.5 (빠름) |
-| **노력 수준** | ○ low / ◐ medium / ● high / ⬤ xhigh (Opus 4.7) |
-| **별칭** | `opus`, `sonnet`, `haiku`, `auto`, `opusplan`, `sonnet[1m]`, `opus[1m]` |
+| **모델** | Sonnet 5 (최신/기본, 1M), Opus 4.8 (복잡 에이전틱 코딩 권장), Fable 5 (Mythos-class 최고 능력), Sonnet 4.6·Opus 4.7 (이전 세대), Haiku 4.5 (빠름) |
+| **노력 수준** | ○ low / ◐ medium / ● high(기본) / ⬤ xhigh |
+| **별칭** | `default`, `sonnet`, `opus`, `fable`, `haiku`, `auto`, `opusplan`, `sonnet[1m]`, `opus[1m]` |
 | **전환 방법** | `/model`, `--model`, `ANTHROPIC_MODEL`, settings.json, Option+P |
 | **우선순위** | `/model` > `--model` > 환경 변수 > settings 파일 |
 | **Opusplan** | 계획은 Opus, 실행은 Sonnet — 비용 효율적 |

@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-05-23 -->
+<!-- last_updated: 2026-07-07 -->
 
 # 25. 플러그인
 
@@ -55,8 +55,8 @@ Anthropic의 공식 마켓플레이스(`claude-plugins-official`)에는 **60개 
 
 | 탭 | 기능 |
 |----|------|
-| **Discover** | 마켓플레이스에서 플러그인 탐색 |
-| **Installed** | 설치된 플러그인 관리 |
+| **Discover** | 마켓플레이스에서 플러그인 탐색 (**검색바** 지원, 2.1.172) |
+| **Installed** | 설치된 플러그인 관리 (플러그인이 제공하는 **Skills 섹션** 표시, 2.1.186) |
 | **Marketplaces** | 마켓플레이스 소스 관리 |
 | **Errors** | 플러그인 오류 진단 |
 
@@ -64,6 +64,9 @@ Anthropic의 공식 마켓플레이스(`claude-plugins-official`)에는 **60개 
 
 ```bash
 # 플러그인 관리
+/plugin list                               # 설치된 플러그인 목록 (2.1.163)
+/plugin list --enabled                     # 활성 플러그인만
+/plugin list --disabled                    # 비활성 플러그인만
 /plugin install name@marketplace           # 설치
 /plugin uninstall name@marketplace         # 제거
 /plugin enable name@marketplace            # 활성화
@@ -87,6 +90,9 @@ Anthropic의 공식 마켓플레이스(`claude-plugins-official`)에는 **60개 
 ### CLI에서 플러그인 관리
 
 ```bash
+# 새 플러그인 스캐폴딩 (.claude/skills에 생성, 2.1.157)
+claude plugin init my-plugin
+
 # 매니페스트 검증 ($schema, version, description 등 확장 필드 허용)
 claude plugin validate ./my-plugin
 
@@ -99,14 +105,21 @@ claude plugin tag
 # 구성 요소 인벤토리 + 세션당 예상 토큰 비용 표시
 claude plugin details security-scanner
 
+# 활성화 (의존하는 플러그인도 함께 강제 활성화, 2.1.157)
+claude plugin enable security-scanner
+
 # 비활성화 (다른 플러그인이 의존하면 거부)
 claude plugin disable security-scanner
 
 # 마켓플레이스 추가 (의존성 자동 해결)
 claude plugin marketplace add owner/repo
+
+# 마켓플레이스 제거 (스코프 지정, 2.1.152)
+claude plugin marketplace remove owner/repo --scope user   # user|project|local
 ```
 
-> **의존성 강제 (2.1.143)**: `claude plugin disable`은 다른 활성 플러그인이 대상에 의존하고 있으면 비활성화를 **거부**하고 의존 체인을 알려줍니다.
+> **의존성 강제 (2.1.143)**: `claude plugin disable`은 다른 활성 플러그인이 대상에 의존하고 있으면 비활성화를 **거부**하고 의존 체인을 알려줍니다. 반대로 `claude plugin enable`(2.1.157)은 활성화하는 플러그인의 전이 의존성(transitive dependencies)을 함께 강제 활성화합니다.
+> **`.claude/skills` 자동 로드 (2.1.157)**: `.claude/skills` 디렉토리에 있는 플러그인은 **마켓플레이스 없이도 자동으로 로드**됩니다. `claude plugin init <이름>`이 바로 이 위치에 새 플러그인을 스캐폴딩합니다.
 > **`claude plugin details` (2.1.139)**: 설치 전후로 플러그인이 제공하는 커맨드·에이전트·스킬·훅·MCP/LSP 서버 목록과 **세션당 예상 컨텍스트 토큰 비용**을 확인할 수 있습니다. `/plugin`의 Discover/Browse 화면에서도 동일 정보가 표시됩니다.
 
 ### 임시 로딩 (URL/디렉토리/zip)
@@ -238,6 +251,7 @@ my-plugin/
 | `mcpServers` | | MCP 서버 설정 |
 | `lspServers` | | LSP 서버 설정 |
 | `strict` | | `true`(기본): plugin.json이 정의의 기준, `false`: 마켓플레이스 엔트리가 정의를 제어 |
+| `defaultEnabled` | | `false`로 두면 설치해도 자동 활성화되지 않음. `/plugin` 또는 `claude plugin enable`로 켜기 (2.1.154/2.1.157). 마켓플레이스 엔트리에도 선언 가능 |
 
 ### `${CLAUDE_PLUGIN_ROOT}`
 
@@ -445,6 +459,8 @@ my-marketplace/
 | **인라인 (settings)** | `{ "source": "settings" }` | settings.json에서 직접 선언 (외부 마켓플레이스 불필요) |
 
 > 상대 경로는 Git 또는 로컬 경로로 추가된 마켓플레이스에서만 동작합니다. URL로 `marketplace.json`을 직접 가리키는 경우 상대 경로가 해석되지 않습니다.
+
+> **`skipLfs` (2.1.153)**: `github`/`git` 소스에 `"skipLfs": true`를 추가하면 클론/업데이트 시 Git LFS 다운로드를 건너뜁니다. 대용량 LFS 자산이 포함된 저장소에서 설치 속도를 높일 수 있습니다.
 
 ### 마켓플레이스 CLI 관리
 

@@ -1,4 +1,4 @@
-<!-- last_updated: 2026-05-23 -->
+<!-- last_updated: 2026-07-07 -->
 
 # 부록 B: CLI 레퍼런스
 
@@ -28,14 +28,16 @@ claude [옵션] [초기 프롬프트]
 | `-w`, `--worktree [이름]` | 격리된 Git worktree에서 세션 시작 |
 | `-n`, `--name <이름>` | 세션 표시 이름 지정 |
 | `--bg` | 백그라운드 세션으로 시작 (Agent View/`/resume`에 `bg`로 표시) |
+| `--bg --exec '<명령>'` | 셸 명령을 백그라운드 세션으로 실행, 나중에 attach/detach (2.1.154). `claude agents`에서 `! <명령>`과 동일 |
 | `--no-session-persistence` | 세션 저장 안 함 |
 
 ### 모델과 추론
 
 | 플래그 | 설명 |
 |--------|------|
-| `--model <모델>` | 모델 지정 (opus, sonnet, haiku, opusplan) |
-| `--permission-mode <모드>` | 권한 모드 (default, acceptEdits, plan, dontAsk, bypassPermissions) |
+| `--model <모델>` | 모델 지정 (sonnet, opus, fable, haiku, opusplan) |
+| `--fallback-model <모델>` | 기본 모델을 찾지 못하면 세션 나머지 동안 이 모델로 전환 (2.1.152). 설정 키 `fallbackModel`(최대 3개 체인)과 별개 |
+| `--permission-mode <모드>` | 권한 모드 (manual(기본, 2.1.200), acceptEdits, plan, dontAsk, bypassPermissions). `default`는 `manual`의 이전 명칭 |
 
 ### 비대화형 모드
 
@@ -44,13 +46,13 @@ claude [옵션] [초기 프롬프트]
 | `-p`, `--print` | 비대화형 출력 |
 | `--output-format <형식>` | text, json, stream-json |
 | `--input-format <형식>` | 입력 형식 지정 |
-| `--json-schema <스키마>` | 구조화된 JSON 출력 |
+| `--json-schema <스키마>` | 구조화된 JSON 출력. 워크플로우의 `agent({schema})`와 함께 구조화 출력을 지원하며 무한 재호출 방지가 수정됨 (2.1.187) |
 | `--max-turns <N>` | 최대 턴 수 |
 | `--max-budget-usd <금액>` | 비용 한도 (달러) |
 | `--append-system-prompt <텍스트>` | 시스템 프롬프트 추가 |
 | `--system-prompt <텍스트>` | 시스템 프롬프트 교체 |
 | `--verbose` | 상세 로깅 |
-| `--tools <도구들>` | 허용 도구 (쉼표 구분) |
+| `--tools <도구들>` | 허용 도구 (쉼표 구분). `Grep`/`Glob`을 명시하면 네이티브 빌드의 임베디드 검색 도구를 제공 (2.1.162) |
 
 ### 기타
 
@@ -63,6 +65,7 @@ claude [옵션] [초기 프롬프트]
 | `--mcp-debug` | MCP 디버그 모드 |
 | `--channels <플러그인>` | 외부 플랫폼 채널 활성화 (Telegram, Discord) |
 | `--bare` | 훅, LSP, 플러그인 동기화, 스킬 탐색을 건너뛰고 최소 모드로 실행 |
+| `--safe-mode` | 모든 커스터마이즈를 비활성화한 안전 모드로 시작 (환경 변수 `CLAUDE_CODE_SAFE_MODE`와 동일, 2.1.169) |
 | `--tui` | 시작 시 풀스크린(TUI) 모드 |
 | `--plugin-url <url>` | URL에서 플러그인 아카이브를 받아 현재 세션에 로드 |
 | `--plugin-dir <경로\|.zip>` | 로컬 디렉토리 또는 zip 아카이브에서 플러그인 로드 |
@@ -101,6 +104,9 @@ claude mcp add <이름> -e KEY=VAL <명령어>  # 환경 변수와 함께
 claude mcp list                            # 서버 목록
 claude mcp get <이름>                      # 서버 상세 정보
 claude mcp remove <이름>                   # 서버 제거
+claude mcp login <이름>                    # MCP 서버별 로그인 (2.1.186)
+claude mcp logout <이름>                   # MCP 서버별 로그아웃 (2.1.186)
+claude mcp login <이름> --no-browser       # 브라우저 없이 stdin 리다이렉트로 인증
 ```
 
 ### `claude project`
@@ -139,17 +145,25 @@ claude agents --add-dir <경로> \
 - 세션을 시작하고, 백그라운드로 보내고, 상태와 마지막 응답을 엿보고, 입력이 필요할 때만 다시 들어갈 수 있습니다
 - `--json` 출력은 tmux-resurrect, 상태바, 세션 피커 등 스크립팅에 활용합니다
 - 백그라운드 세션(`claude --bg`)도 같은 목록에 `bg`로 표시됩니다
+- 디스패치 입력에서 `! <명령>`을 입력하면 셸 명령을 attach/detach 가능한 백그라운드 세션으로 실행합니다 (2.1.154, `claude --bg --exec`와 동일). `/logout`은 로그아웃을 수행합니다
+- 디스패치 세션은 `settings.json`의 `agent` 필드를 따르며 `--agent <이름>`으로 재정의할 수 있습니다 (2.1.157)
+- 자동완성이 네이티브 슬래시 커맨드와 번들 스킬까지 부분 문자열로 매칭합니다 (2.1.153/2.1.157)
 
 ### `claude plugin`
 
 ```bash
+claude plugin init <이름>                  # 새 플러그인 스캐폴딩 (.claude/skills에 생성, 2.1.157)
 claude plugin validate <경로>              # 매니페스트 유효성 검증
 claude plugin prune                        # 고아 의존성 제거
 claude plugin tag                          # 릴리스용 git 태그 생성
 claude plugin details <이름>               # 플러그인 구성 요소 인벤토리 + 세션당 예상 토큰 비용
+claude plugin enable <이름>                # 활성화 (전이 의존성도 함께 강제 활성화, 2.1.157)
 claude plugin disable <이름>               # 비활성화 (다른 플러그인이 의존하면 거부)
 claude plugin marketplace add <소스>       # 마켓플레이스 등록
+claude plugin marketplace remove <소스> --scope user|project|local  # 스코프 지정 제거 (2.1.152)
 ```
+
+> **`claude doctor`**: `claude doctor`는 마지막 업데이트 시도 결과를 함께 표시합니다 (2.1.153). npm 전역 설치가 자동 업데이트되지 않을 때 안내합니다.
 
 ### `claude ultrareview`
 
@@ -161,6 +175,7 @@ claude ultrareview [target]                # 비대화형 클라우드 코드 �
 
 ```bash
 /plugin                                    # 인터랙티브 관리 UI (4탭)
+/plugin list [--enabled|--disabled]        # 설치된 플러그인 목록 (2.1.163)
 /plugin install name@marketplace           # 플러그인 설치
 /plugin uninstall name@marketplace         # 플러그인 제거
 /plugin enable name@marketplace            # 활성화
@@ -209,7 +224,10 @@ claude ultrareview [target]                # 비대화형 클라우드 코드 �
 | `CLAUDE_CODE_EFFORT_LEVEL` | 노력 수준 | high |
 | `CLAUDE_EFFORT` | 활성 노력 수준 (훅·Bash 서브프로세스에 노출, 읽기 전용) | — |
 | `CLAUDE_CODE_MAX_OUTPUT_TOKENS` | 출력 토큰 한도 | 32,000 |
-| `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` | Fast 모드를 Opus 4.6에 고정 (`1`, 기본은 4.7) | — |
+| `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` | ⚠️ 제거됨 (2.1.154 폐지 → 2.1.160 제거, no-op). Fast 모드 기본은 Opus 4.8 | — |
+| `CLAUDE_CODE_ENABLE_AUTO_MODE` | 서드파티 프로바이더 Auto Mode 옵트인 (2.1.158) | — |
+| `CLAUDE_CODE_MAX_RETRIES` | 자동 재시도 횟수 (상한 15로 캡, 2.1.186) | — |
+| `CLAUDE_CODE_RETRY_WATCHDOG` | 무인 세션 재시도 워치독 (2.1.186; 2.1.199부터 기본 300·상한 해제) | — |
 
 ### 동작 제어
 
@@ -248,6 +266,12 @@ claude ultrareview [target]                # 비대화형 클라우드 코드 �
 | `CLAUDE_CODE_SESSION_ID` | Bash 서브프로세스에 세션 ID 노출 |
 | `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | 실험적 베타 기능 비활성화 |
 | `OTEL_LOG_RAW_API_BODIES` | 원본 API 본문 OTel 로깅 (디버그) |
+| `OTEL_LOG_TOOL_DETAILS` | `tool_decision`에 `tool_parameters` 포함 (2.1.157) |
+| `OTEL_METRICS_INCLUDE_ENTRYPOINT` | 메트릭에 세션 진입점(`app.entrypoint`) 추가 (2.1.152) |
+| `OTEL_LOG_ASSISTANT_RESPONSES` | `claude_code.assistant_response` 로그 이벤트 게이팅 (2.1.193) |
+| `CLAUDE_CLIENT_PRESENCE_FILE` | 클라이언트 presence 마커 파일 (모바일 푸시 억제, 2.1.181) |
+| `CLAUDE_CODE_DISABLE_MOUSE_CLICKS` | 마우스 클릭 비활성화 (휠 스크롤 유지, 2.1.195) |
+| `CLAUDE_CODE_SAFE_MODE` | 안전 모드 시작 (`--safe-mode`와 동일, 2.1.169) |
 | `CLAUDE_CODE_PLUGIN_PREFER_HTTPS` | GitHub 플러그인 소스를 SSH 대신 HTTPS로 클론 |
 | `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY` | PowerShell 도구의 `-ExecutionPolicy Bypass` 옵트아웃 (`1`) |
 | `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` | Stop 훅 연속 차단 한도(기본 8) 재정의 |
