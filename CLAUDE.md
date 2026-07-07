@@ -34,3 +34,16 @@ assets/                   # 이미지, 다이어그램
 ## 빌드
 - `scripts/build.sh`: 전체 문서를 하나의 파일로 병합
 - `scripts/check-links.sh`: 내부 링크 검증
+
+## 하네스: 가이드북 최신화
+
+**목표:** Claude Code 신규 릴리스를 추적하여 이 한국어 가이드북에 정확하게 반영하고 버전을 확정한다.
+
+**트리거:** "업데이트 확인하고 적용해줘", "최신 버전 반영", "변경사항 반영", "책 업데이트", "신규 버전 조사", "다시 반영" 등 가이드북 최신화 요청 시 `book-updater` 스킬을 사용하라. 단순 개념 질문은 직접 응답 가능.
+
+**구성:** 에이전트 팀 5명(release-tracker → fact-verifier → doc-updater → consistency-reviewer → version-keeper) + 확장 스킬 3개(changelog-research, book-style-guide, doc-consistency-checks). 상세는 `.claude/agents/`, `.claude/skills/`에서 관리한다.
+
+**변경 이력:**
+| 날짜 | 변경 내용 | 대상 | 사유 |
+|------|----------|------|------|
+| 2026-07-07 | 초기 구성 | 전체 | 릴리스 추적·반영 워크플로우 자동화 |
